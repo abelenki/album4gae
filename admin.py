@@ -111,34 +111,6 @@ class AdminDeleteAlbum(AdminControl):
         self.redirect('/admin/albums/')
     
 
-class Admin_Upload2(AdminControl):
-    @requires_admin
-    def get(self):
-        self.render('views/upload2.html', {})
-    @requires_admin
-    def post(self):
-        dit={"result":"error"}
-        bf=self.request.get("Filedata")
-        if not bf:
-            return self.returnjson(dit)
-        image=methods.addImage2(bf)
-        if not image:
-            return self.returnjson(dit)
-        dit["result"]="ok"
-        dit["id"]=image.id
-        return self.returnjson(dit)
-        
-class Delete_Image(AdminControl):
-    @requires_admin
-    def get(self,key):
-        methods.delImage(key)
-        self.redirect('/')
-        
-class Delete_Image_ID(AdminControl):
-    @requires_admin
-    def get(self,id):
-        methods.DeletePhoto(id)
-        self.redirect('/')
 
 class Admin_Login(AdminControl):
     @requires_admin
@@ -150,8 +122,6 @@ def main():
     application = webapp.WSGIApplication(
                    [(r'/admin/upload/', Admin_Upload),
                     (r'/admin/deleteAlbum/(?P<id>[0-9]+)/',AdminDeleteAlbum),
-                    (r'/admin/del/(?P<key>[a-z,A-Z,0-9]+)', Delete_Image),
-                    (r'/admin/delete/(?P<id>[0-9]+)/', Delete_Image_ID),
                     (r'/admin/albums/', Admin_CreateAlbum),
                     (r'/admin/',AdminMain),
                     (r'/admin/(?P<id>[0-9]+)/',PhotoList),
