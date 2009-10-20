@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>上传文件</title>
+</head>
+<body>
+<div id="uploadpanle">
+  <form id="upload_form" action="/admin/upload/" enctype="multipart/form-data" method="post">
+<h2>上传图片</h2>
+<p>相册:</p>
+<p>
+<select name="album">
+{%for a in albums %}
+<option value="{{a.id}}">{{a.AlbumName}}</option>
+{%endfor%}
+</select>
+</p>
+<p>标题:<input type="text" name="Name"  /></p>
+<p>说明:<input type="text" name="Description"  /></p>
+<p>选择图片路径并点击“上传”按钮</p>
+
+    <div><label for="id_file">File:</label> <input type="file" name="file" id="file" /></div>
+    <div><input type="submit" value="上传" /></div>
+  
+<h5>上传说明</h5>
+<ul>
+<li>图片小于1M</li>
+</ul>
+</form>
+</div>
+
+<div id="albums">
+<form action="/admin/albums" method="post">
+相册名:
+<input type="text" name="albumname"  />
+<input type="submit" value="Create" />
+</form>
+</div>
+
+</body>
+</html>

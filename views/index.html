@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}我的相册{% endblock %}
+{% block main %}
+
+{% for album in albums %}
+  <div class="album">
+  <a href="/album/{{album.id}}/">
+   <div class="cover" style="background-image:url({{album.Cover}})">
+
+   </div>
+   </a>
+   <div class="des">
+    <a href="/album/{{album.id}}/">
+	 <p><strong>{{album.AlbumName}}</strong></p>
+	 <p>共<kbd>{{album.PhotoCount}}</kbd>张</p>
+	 <p>{{album.LastUpdate|timezone:8|date:"Y-m-d H:i"}}更新</p>
+	 <p>{{album.CreateDate|timezone:8|date:"Y-m-d" }}创建</p>
+	 </a>
+	 </div>
+  </div>
+  {% endfor %}
+{% endblock %}
+</body>
+</html>

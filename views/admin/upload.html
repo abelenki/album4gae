@@ -1,0 +1,30 @@
+{% extends "adminbase.html" %}
+{% block title %}我的相册{% endblock %}
+{%block nav%}我的相册{%endblock%}
+{% block main %}
+
+<form id="upload_form" action="/admin/upload/" enctype="multipart/form-data" method="post">
+  <fieldset>
+  <legend>创建一个新相册</legend>
+<p><label>相册</label></p>
+<p>
+<select name="album">
+{%for a in albums %}
+<option value="{{a.id}}">{{a.AlbumName}}</option>
+{%endfor%}
+</select>
+</p>
+<p><label>标题</label></p>
+<p><input type="text" name="Name"  class="input" /></p>
+<p><label>说明</label></p>
+<p><input type="text" name="Description" class="input"  /></p>
+
+
+<p><label>上传文件(小于1,024kb)</label></p>
+<p><input type="file" name="file" id="file" /></p>
+<p><input type="submit" value="上传" class="button"/></p>
+</form>
+  </fieldset>
+{% endblock %}
+</body>
+</html>

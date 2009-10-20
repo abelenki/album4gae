@@ -1,0 +1,38 @@
+{% extends "adminbase.html" %}
+{% block title %}我的相册{% endblock %}
+{%block nav%}我的相册{%endblock%}
+{% block main %}
+
+
+  <fieldset>
+  <legend>创建一个新相册</legend>
+	 <form action="/admin/albums/" method="post">
+	   <p><input type="text" name="albumname" value="" class="input" /></p>
+	   <p><input type="submit" value="确认创建" class="button" />
+	   </form>
+
+	 </fieldset>
+
+
+{% for album in albums %}
+  <div class="album">
+   <div class="cover"  style="background-image:url({{album.Cover}})">
+   </div>
+   <div class="des">
+	 <p><strong>{{album.AlbumName}}</strong></p>
+	 <p>共{{album.PhotoCount}}张({{album.DisplayOrder}})</p>
+	 <p>{{album.LastUpdate|timezone:8|date:"Y-m-d H:i"}}更新</p>
+	 <p>{{album.CreateDate|timezone:8|date:"Y-m-d" }}创建</p>
+	 <p><a href="/admin/{{album.id}}/">[查看]</a>|<a href="/admin/edit/{{album.id}}/?keepThis=true&TB_iframe=true&height=400&width=450&" class="thickbox" >[修改]</a>|<a href="/admin/deleteAlbum/{{album.id}}/" onclick="return confirm('确定?');">[删除]</a>
+	 </p>
+	 </div>
+	
+	 
+  </div>
+  {% endfor %}
+<div class="clear"></div>
+
+
+{% endblock %}
+</body>
+</html>
