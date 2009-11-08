@@ -42,7 +42,7 @@ class Albums(db.Model):
     def AlbumUrl(self):
         return 'http://%s/alubm/%s' % (os.environ['HTTP_HOST'],self.key().id())
     def GetAll(self):
-        return Albums.all().order('DisplayOrder').order('-LastUpdate').fetch(1000)
+        return Albums.all().order('DisplayOrder').fetch(1000)
     def Photos(self):
         photos =  Photo.all().filter('Album =',self).order('-CreateTime').fetch(1000)
         return photos

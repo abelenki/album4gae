@@ -13,7 +13,6 @@ from django.utils import simplejson
 adminFlag=True
 
 
-
 class AdminControl(webapp.RequestHandler):
     def render(self,template_file,template_value):
         path=os.path.join(os.path.dirname(__file__),template_file)
@@ -24,6 +23,7 @@ class AdminControl(webapp.RequestHandler):
 
 def requires_admin(method):
     @wraps(method)
+    '''用户权限验证包装器'''
     def wrapper(self, *args, **kwargs):
         if not users.is_current_user_admin() and adminFlag:
             self.redirect(users.create_login_url(self.request.uri))
@@ -73,7 +73,7 @@ class Admin_Upload(AdminControl):
         bf=self.request.get("file")
         if not bf:
             return self.redirect('/admin/upload/')
-#        name=self.request.body_file.vars['file'].filename
+            #name=self.request.body_file.vars['file'].filename
         mime = self.request.body_file.vars['file'].headers['content-type']
         if mime.find('image')==-1:
             return self.redirect('/admin/upload/')

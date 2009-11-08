@@ -10,34 +10,42 @@ indexes:
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
 
-# Used 122 times in query history.
 - kind: Albums
   properties:
   - name: DisplayOrder
   - name: LastUpdate
     direction: desc
 
-# Used 42 times in query history.
+- kind: Albums
+  properties:
+  - name: DisplayOrder
+  - name: LastUpdate
+    direction: desc
+  - name: PhotoCount
+    direction: desc
+
+- kind: Albums
+  properties:
+  - name: PhotoCount
+  - name: DisplayOrder
+
 - kind: Photo
   properties:
   - name: Album
   - name: CreateTime
 
-# Used 18 times in query history.
 - kind: Photo
   properties:
   - name: Album
   - name: CreateTime
     direction: desc
 
-# Unused in query history -- copied from input.
 - kind: Photo
   properties:
   - name: Album
   - name: CreateTime<
   - name: CreateTime
 
-# Unused in query history -- copied from input.
 - kind: Photo
   properties:
   - name: Album
@@ -45,13 +53,11 @@ indexes:
   - name: CreateTime
     direction: desc
 
-# Unused in query history -- copied from input.
 - kind: Photo
   properties:
   - name: Album=
   - name: CreateTime
 
-# Unused in query history -- copied from input.
 - kind: Photo
   properties:
   - name: Album=

@@ -9,6 +9,7 @@ import methods
 import logging
 def format_date(dt):
     return dt.strftime('%a, %d %b %Y %H:%M:%S GMT')
+    
 
 class PublicPage(webapp.RequestHandler):
     def render(self, template_file, template_value):
