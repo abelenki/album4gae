@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}我的相册-{{image.photo.Album.AlbumName}}{% endblock %}
+{%block nav%}&gt;<a href="/album/{{image.photo.Album.id}}/">{{image.photo.Album.AlbumName}}</a>&gt; {{image.photo.Name|escape}}{%endblock%}
+
+{% block script%}
+<script src="/static/page.js" type="text/javascript"></script>
+{%endblock%}
+{% block main %}
+
+{% if image.photo %}
+<div id="container">
+<div class="showimg">
+<p>
+<img class="img" src="/image/{{image.photo.id}}/" alt="{{image.Name}}" />
+</p>
+<p>
+{{image.photo.Description}}
+</p>
+<div class="comment">
+<form action="/postcomment/" method="post">
+   <h3>增加你的回应</h3>
+   {% if self.is_login %}
+   <p>
+   <textarea name="comment" class="textarea" cols="80" rows="6"></textarea>
+   </p>
+   <p>
+   <input type="submit" value="提交" class="button" />
+   <input type="hidden" value="{{image.photo.id}}" name="pid" />
+   </p>
+   {% else %}
+   请 <a href="{{self.loginurl}}">登录</a> 后发表评论
+   {% endif %}
+ </form>
+
+ <div class="commentlist">
+<ul>
+ {%for c in comments%}
+ <li>
+     <div id="comment-{{c.Id}}" class="comment_e"> 
+	 <address> 
+	 <span class="avatar">
+	 <img width="48" height="48" class="avatar" src="{{c.Author.email|avatar}}" alt="">
+	 </span>
+	 <cite class="fn">{{c.Author.nickname}}</cite> 
+	 </address>
+	 <div class="entry-content comment-content">
+	 <p class="last-child">
+	 {{c.CommentBody|ubb}}
+	 </p></div><div class="clear"></div><div class="comment-meta"> <span class="date comment-date"> <abbr class="published">{{c.CommentDate|datetz}}</abbr> 
+	 {%if self.is_admin%}
+	 [<a href="#1" onclick="delete_comment({{c.Id}});">删除</a>]
+	 {%endif%}
+	 </span> </div></div>
+</li>
+ {% endfor %}
+ </ul>
+ </div>
+
+ 
+</div>
+
+</div>
+<div class="photo_sidebar">
+
+
+	<ul class="ulnav">
+	
+	<li>
+	{% if image.prev %}
+	<a href="/photo/{{image.prev.id}}/" title="上一张">
+	<img src="/s/{{image.prev.id}}/" alt="{{image.prev.Name}}" />
+	</a>
+	{%else%}
+	N/A
+	{% endif %}
+	</li>
+	
+	
+	<li>
+	{% if image.next %}
+	<a href="/photo/{{image.next.id}}/" title="下一张">
+	<img src="/s/{{image.next.id}}/" alt="{{image.next.Name}}" />
+	</a>
+	{%else%}
+	N/A
+	{% endif %}
+	</li>
+	</ul>
+   
+
+	<dl class="photoinfo clear">
+<dt><strong>{{image.photo.Name|escape}}</strong></dt>
+<dd>上传时间:{{image.photo.CreateTime|datetz}}</dd>
+<dd>查看次数:{{image.photo.ViewCount}}</dd>
+<dd>文件类型:{{image.photo.FileType}}</dd>
+<dd>分辨率:{{image.photo.Width}}*{{image.photo.Height}}</dd>
+<dd>图片大小:{{image.photo.Size|filesizeformat}}</dd>
+<dd>{% if admin %}<a href="/admin/delete/{{image.photo.id}}/">删除</a>{% endif %}</dd>
+
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+{% endif %}
+{%if self.is_admin%}
+<script type="text/javascript">
+function delete_comment(cid)
+{
+   $.get('/deletecomment/'+cid+'/',function(data){
+		if(data=='0')
+		{ 
+		   $('#comment-'+cid).slideUp(500);
+		}
+   });
+}
+</script>
+{%endif%}
+{% endblock %}
+</body>
+</html>

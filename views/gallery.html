@@ -1,8 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<simpleviewergallery maxImageWidth="780" maxImageHeight="880" textColor="0xFFFFFF" frameColor="0xFFFFFF" frameWidth="20" stagePadding="40" navPadding="40" thumbnailColumns="3" thumbnailRows="6" navPosition="left" vAlign="center" hAlign="center" title="{{album.AlbumName}}" enableRightClickOpen="true" backgroundImagePath="" imagePath="http://yibinalbum.appspot.com/image/" thumbPath="http://yibinalbum.appspot.com/s/">
+<simpleviewergallery
+	title=""
+	textColor="000000"
+	frameColor="EFEFEF"
+	thumbPosition="TOP"
+	galleryStyle="CLASSIC"
+	thumbColumns="9"
+	thumbRows="1"
+	showOpenButton="FALSE"
+	showFullscreenButton="FALSE"
+	frameWidth="10"
+	maxImageWidth="850"
+	maxImageHeight="600"
+	imagePath="/image/"
+	thumbPath="/s/"
+	useFlickr="false"
+	flickrUserName=""
+	flickrTags=""
+	languageCode="AUTO"
+	languageList=""		
+	
+>
+
 {%for photo in photos%}
-<image><filename>{{photo.id}}/</filename>
-<caption><![CDATA[{{photo.Description}}]]></caption>	
+<image imageURL="/image/{{photo.id}}/" thumbURL="/s/{{photo.id}}/" linkURL="" linkTarget="" >
+	<caption><![CDATA[{{photo.Description}}]]></caption>
 </image>
 {% endfor %}
 </simpleviewergallery>

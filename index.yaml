@@ -16,18 +16,10 @@ indexes:
   - name: LastUpdate
     direction: desc
 
-- kind: Albums
+- kind: Comment
   properties:
-  - name: DisplayOrder
-  - name: LastUpdate
-    direction: desc
-  - name: PhotoCount
-    direction: desc
-
-- kind: Albums
-  properties:
-  - name: PhotoCount
-  - name: DisplayOrder
+  - name: Photo
+  - name: CommentDate
 
 - kind: Photo
   properties:

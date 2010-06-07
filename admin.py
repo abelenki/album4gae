@@ -13,6 +13,7 @@ from django.utils import simplejson
 adminFlag=True
 
 
+
 class AdminControl(webapp.RequestHandler):
     def render(self,template_file,template_value):
         path=os.path.join(os.path.dirname(__file__),template_file)
@@ -22,8 +23,8 @@ class AdminControl(webapp.RequestHandler):
         self.response.out.write(simplejson.dumps(dit))
 
 def requires_admin(method):
+
     @wraps(method)
-    '''用户权限验证包装器'''
     def wrapper(self, *args, **kwargs):
         if not users.is_current_user_admin() and adminFlag:
             self.redirect(users.create_login_url(self.request.uri))
@@ -64,17 +65,22 @@ class PhotoList(AdminControl):
                 methods.DeletePhoto(int(i))
         self.redirect('/admin/'+str(alid)+'/')
 
+
+
+
 class Admin_Upload(AdminControl):
     @requires_admin
     def get(self):
         self.render('views/admin/upload.html', {'albums':methods.GetAllAlbums()})
     @requires_admin
     def post(self):
-        bf=self.request.get("file")
+        bf=self.request.get("Filedata")
+        self.response.out.write(self.request)
+        return
         if not bf:
             return self.redirect('/admin/upload/')
-            #name=self.request.body_file.vars['file'].filename
-        mime = self.request.body_file.vars['file'].headers['content-type']
+#        name=self.request.body_file.vars['file'].filename
+        mime = self.request.body_file.vars['Filedata'].headers['content-type']
         if mime.find('image')==-1:
             return self.redirect('/admin/upload/')
         description=self.request.get("Description")
@@ -121,6 +127,7 @@ def main():
     webapp.template.register_template_library('filter')
     application = webapp.WSGIApplication(
                    [(r'/admin/upload/', Admin_Upload),
+                  
                     (r'/admin/deleteAlbum/(?P<id>[0-9]+)/',AdminDeleteAlbum),
                     (r'/admin/albums/', Admin_CreateAlbum),
                     (r'/admin/',AdminMain),

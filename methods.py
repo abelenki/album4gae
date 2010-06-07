@@ -67,6 +67,7 @@ def GetPhoto(id):
 def downImage(id,size="image"):
     key=id+'_CACHE_'+size
     image=memcache.get(key)
+    image = None
     if not image:
         image=resizeImage(id, size)
         memcache.set(key,image,1800)
@@ -76,9 +77,10 @@ def resizeImage(id,size="image"):
     image=GetPhoto(id)
     image = image['photo'];
     if not image:return None
+   
     if size=="image":return image
     img=images.Image(image.PhotoStream)
-    width = height = 200
+    width = height = 150
     if size == 's':
         width = height = 100
     elif size =='c':

@@ -2,56 +2,23 @@
 {% block title %}我的相册-{{album.AlbumName}}{% endblock %}
 {%block nav%}&gt;{{album.AlbumName}}{%endblock%}
 {% block script %}
-<script type="text/javascript" src="/static/swfobject.js"></script>
-<style type="text/css">	
-	/* hide from ie on mac \*/
-	html {
-		height: 100%;
-		/*overflow: hidden;*/
-	}
-	
-	#flashcontent {
-		height: 650px;
-	}
-	/* end hide */
 
-	body {
-		height: 100%;
-		margin: 0;
-		padding: 0;
-		background-color: #fff;
-		color:#000;
-		font-family:sans-serif;
-		font-size:40;
-	}
-    #body{height:700px;}
-	a {	
-		color:#fff;
-	}
-	
-</style>
 {% endblock %}
 {% block main %}
-<div id="flashcontent">PostcardViewer requires JavaScript and the Flash Player. <a href="http://www.macromedia.com/go/getflashplayer/">Get Flash here.</a> </div>	
-	<script type="text/javascript">
-	
-		var fo = new SWFObject("/static/viewer.swf", "viewer", "100%", "100%", "8", "#181818");
-		
-		// SIMPLEVIEWER CONFIGURATION OPTIONS
-		// To use an option, uncomment it by removing the "//" at the start of the line
-		// For a description of config options, go to: 
-		// http://www.airtightinteractive.com/simpleviewer/options.html
-		
-		//fo.addVariable("xmlDataPath", "/xml/{{album.id}}/");
-		//fo.addVariable("firstImageIndex", "5");	
-		//fo.addVariable("langOpenImage", "Open Image in New Window");
-		//fo.addVariable("langAbout", "About");	
-		//fo.addVariable("preloaderColor", "0xFFFFFF");
-		
-		fo.write("flashcontent");
-	
-		
-	</script>	
+<div id="containter">
+<ul>
+{%for photo in photos%}
+<li>
+<a href="/photo/{{photo.id}}"><img src="/m/{{photo.id}}/" /></img></a>
+</li>
+{% endfor %}
+</ul>
+<div style="clear:both;"></div>
+<div id="pager" class="wp-pagenavi">
+{{page}}
+</div>
+
+</div>
 
 {% endblock %}
 </body>
