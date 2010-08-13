@@ -5,8 +5,8 @@
 {% for album in albums %}
   <div class="album">
   <a href="/album/{{album.id}}/">
-   <div class="cover" style="background-image:url({{album.Cover}})">
-
+   <div class="cover">
+       <img src="{{album.Cover}}" alt="" />
    </div>
    </a>
    <div class="des">
@@ -19,8 +19,6 @@
 	 </div>
   </div>
   {% endfor %}
-  <div class="clear"></div>
 {% endblock %}
-
 </body>
 </html>

@@ -6,6 +6,17 @@ from google.appengine.api import memcache
 from google.appengine.api import mail
 from google.appengine.api import urlfetch
 
+class Comment(db.Model):
+    Author = db.StringProperty()
+    Ip = db.StringProperty()
+    CommentDate = db.DateTimeProperty()
+    CommentBody = db.StringProperty()
+    #Photo = db.ReferenceProperty(Photo)
+    @property
+    def Id(self):
+        return str(self.key().id())
+    def Post(self):
+        self.put()
     
 class Albums(db.Model):
     '''相册数据模型'''
@@ -27,22 +38,16 @@ class Albums(db.Model):
     def Cover(self):
         '''封面'''
         if self.CoverId > 0:
-            return 'http://%s/c/%s/' % (os.environ['HTTP_HOST'],self.CoverId)
+            return 'http://%s/c/%s.jpeg' % (os.environ['HTTP_HOST'],self.CoverId)
         return '/static/images/cover.jpg' 
     def AlbumUrl(self):
         return 'http://%s/alubm/%s' % (os.environ['HTTP_HOST'],self.key().id())
     def GetAll(self):
         return Albums.all().order('DisplayOrder').order('-LastUpdate').fetch(1000)
-    def Photos(self,page=1,pagesize=1000):
-        limit = (page-1) * pagesize
-        return db.GqlQuery("SELECT * FROM Photo WHERE Album = :1 ORDER BY CreateTime DESC ",self).fetch(pagesize,offset=(page-1)*pagesize)
-        #photos =  Photo.all().filter('Album =',self).order('-CreateTime').fetch(1000)
-        #return photos
-    def Count(self):
-        return len(Photo.all().filter('Album =',self).fetch(1000))
-    def Reset(self):
-        self.PhotoCount = len(Photo.all().filter('Album =',self).fetch(1000))
-        self.put()
+    def Photos(self):
+        photos =  Photo.all().filter('Album =',self).order('-CreateTime').fetch(1000)
+        return photos
+
 class Photo(db.Model):
     '''照片数据模型'''
     Name = db.StringProperty()
@@ -59,7 +64,10 @@ class Photo(db.Model):
     State = db.IntegerProperty(default = 1)
     PhotoStream = db.BlobProperty()
     Album = db.ReferenceProperty(Albums) 
-    Comments = db.IntegerProperty(default=0)
+    Comments = db.ReferenceProperty(Comment)
+    #left    = db.IntegerProperty(default=0)
+    #top     = db.IntegerProperty(default=0)
+    #rot     = db.IntegerProperty(default=0)
     def id(self):
         return str(self.key().id())
     def Save(self):
@@ -69,7 +77,7 @@ class Photo(db.Model):
         
         self.Album.Save()
     def PhotoUrl(self):
-        return "http://%s/photo/%s/" %(os.environ['HTTP_HOST'],self.key().id())
+        return "http://%s/photo/%s.jpeg" %(os.environ['HTTP_HOST'],self.key().id())
     def Update(self):
         self.put()
     def Prev(self):
@@ -82,30 +90,7 @@ class Photo(db.Model):
         if len(next) == 1:
             return next[0]
         return None
-    def Get(self,id):
-        return Photo.get_by_id(int(id))
-    
-
-class Comment(db.Model):
-    Author = db.UserProperty()
-    Ip = db.StringProperty()
-    CommentDate = db.DateTimeProperty()
-    CommentBody = db.StringProperty(multiline=True)
-    Photo = db.ReferenceProperty(Photo)
-    @property
-    def Id(self):
-        return str(self.key().id())
-    def Save(self):
-        self.put()
-    def Get(self,id):
-        return Comment.get_by_id(int(id))
-    def Delete(self,id):
-        Comment.get_by_id(int(id)).delete()
-    def GetCommentByPhoto(self,pid):
-        photo = Photo.get_by_id(int(pid))
-        comments =  Comment.all().filter('Photo =',photo).order('CommentDate').fetch(1000)
-        return comments
-
+        
 class Settings(db.Model):
     SiteTitle = db.StringProperty(default=u'我的相册')
     SubSiteTitle = db.StringProperty(default='')

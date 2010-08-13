@@ -22,7 +22,7 @@ margin:3px;
 <form action="/admin/{{albumid}}/" method="post">
 	<ul class="photos">
 	{% for p in photos %}
-	<li><img src="/s/{{p.id}}/" alt="" /><br /><input type="checkbox" name="deleteid" value="{{p.id}}" /></li>
+	<li><img src="/s/{{p.id}}.jpeg" alt="" /><br /><input type="checkbox" name="deleteid" value="{{p.id}}" /></li>
 	{% endfor %}
 	</ul>
 	<div class="clear"></div>

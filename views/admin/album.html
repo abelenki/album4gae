@@ -16,7 +16,8 @@
 
 {% for album in albums %}
   <div class="album">
-   <div class="cover"  style="background-image:url({{album.Cover}})">
+   <div class="cover">
+   <img src="{{album.Cover}}" alt="" />
    </div>
    <div class="des">
 	 <p><strong>{{album.AlbumName}}</strong></p>
