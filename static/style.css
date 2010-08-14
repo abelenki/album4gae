@@ -1,6 +1,6 @@
  *{margin:0;padding:0}
  body{font-size:12px;
-  color:white;
+  color:#ccc;
 	font-size:13px;
 	background: #222222;
 	font-family:Arial, Helvetica, sans-serif;
@@ -65,19 +65,24 @@ width:300px;
  padding:5px;
  margin:5px;
  text-align:center;
+ height:110px;
  }
  
- div.cover
+ div.cover,img.img_cover
  {
- /*background:url(/static/images/cover.jpg) 6px 5px no-repeat;*/
+ /*background:url(/static/images/cover.jpg) 6px 5px no-repeat;
  width:140px;
  height:100px;
+ */
  padding:3px;
  float:left;
  border:solid 2px;
  margin-right:10px;
  }
- 
+div.album a:hover img
+ {
+ border-color:#fff;
+ }
  div.des
  {
  text-align:left;
@@ -142,3 +147,22 @@ font-weight:bold;
    width:100px;
    cursor:pointer;
  }
+ #goback
+ {
+ position:absolute;
+ left:2px;
+ top:2px;
+ padding:10px 40px;
+ }
+ #goback a
+ {
+ color:#4D4D4D;
+ font-size:450%;
+ font-family:Georgia;
+ font-style: italic;
+ }
+ #goback a:hover
+ {
+  color:#fff;
+ }
+ 

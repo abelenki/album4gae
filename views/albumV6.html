@@ -12,6 +12,7 @@
 
 {% endblock %}
 {% block main %}
+<div id="goback"><a href="/">Home</a></div>
 <div id="gallery">
 {%for p in photos%}
 <div id="pic-{{forloop.counter}}" class="pic" style="top:{{p.top}}px;left:{{p.left}}px;background:url(/c/{{p.id}}.jpeg) no-repeat 50% 50%; -moz-transform:rotate({{p.rot}}deg); -webkit-transform:rotate({{p.rot}}deg);"> 
