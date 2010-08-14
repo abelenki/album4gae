@@ -4,7 +4,7 @@ import os
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.api import users
-
+import math
 import methods
 import logging
 import random
@@ -56,15 +56,22 @@ class MainPage(PublicPage):
         self.render('views/index.html', template_value)
 
 class AlbumPage(PublicPage):
-    def get(self,id):
-        MAX_WEIGTH = 1000
+    def get(self,id,page):
+        MAX_WEIGTH = 988
         MAX_HEIGHT = 700
         album = methods.GetAlbum(id)
+        pagesize = 20
+        pagecount = 1
+        if page is None:page = 1
+        page = int(page)
         if album is None:
             self.error(404)
         else:
-            _photos = album.Photos()
-            logging.debug("length of _photos:%s"% (len(_photos)))
+            pagecount = int(math.ceil(float(album.PhotoCount)/pagesize))
+            offset = (page-1)*pagesize
+            limit = offset + pagesize
+            _photos = album.Photos(offset,pagesize)
+            _photos = _photos[offset:limit]
             for a in _photos:
                 a.left = random.randint(0,MAX_WEIGTH)
                 a.top=random.randint(0,400)
@@ -73,6 +80,11 @@ class AlbumPage(PublicPage):
                     a.top-=120+130
                     a.left-=230
             template_value = {'photos':_photos,'album':album}
+            template_value.update(page=page)
+            template_value.update(pagecount = pagecount)
+            template_value.update(pages = range(1,pagecount + 1))
+            template_value.update(pagesize=pagesize)
+            template_value.update(url=('/album/%s/page' % id))
             self.render('views/albumV6.html',template_value)
 
 
@@ -123,7 +135,7 @@ def main():
                                         (r'/(?P<size>s)/(?P<id>[0-9]+)\.jpeg',GetImage),
                                         (r'/(?P<size>c)/(?P<id>[0-9]+)\.jpeg',GetImage),
                                         (r'/photo/(?P<id>[0-9]+)\.jpeg',ShowImage),
-                                        (r'/album/(?P<id>[0-9]+)/',AlbumPage),
+                                        (r'(?:/album/(?P<id>[0-9]+))?(?:/page/?(?P<page>[0-9]+))?/?',AlbumPage),
                                         (r'/album/(?P<id>[0-9]+)/gallery\.xml',Gallery),
                                         (r'/SwfUpload/',SwfUpload),
                                         ('.*',Error)

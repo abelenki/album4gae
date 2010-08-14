@@ -44,9 +44,11 @@ class Albums(db.Model):
         return 'http://%s/alubm/%s' % (os.environ['HTTP_HOST'],self.key().id())
     def GetAll(self):
         return Albums.all().order('DisplayOrder').order('-LastUpdate').fetch(1000)
-    def Photos(self):
-        photos =  Photo.all().filter('Album =',self).order('-CreateTime').fetch(1000)
-        return photos
+    def Photos(self,offset,limit):
+        #logging.info('offset is %s,limit is %s' % (offset,limit))
+        #logging.info('Photos %s' % (len(photos)))
+        return Photo.all().filter('Album =',self).order('-CreateTime').fetch(1000)#fetch(offset,limit)
+        #return photos
 
 class Photo(db.Model):
     '''照片数据模型'''

@@ -56,7 +56,7 @@ list-style:none;
  .clear{clear:both;}
  
   
- #body{width:1002px;}
+ #body{width:988px;}
  
  div.album{
 /*  background:url(/static/zp_zj_bg.gif) left top no-repeat;*/
@@ -104,14 +104,14 @@ font-weight:bold;
  #copyright
  {
  clear:both;
- margin-top:15px;
+ margin-top:20px;
  text-align:left;
- /*
- background:url(/static/images/appengine-noborder-120x30.gif) left center no-repeat;
+ 
+ /*background:url(http://code.google.com/appengine/images/appengine-noborder-120x30.gif) left center no-repeat;
  padding-left:150px;
- */
- height:40px;
- line-height:40px;
+*/
+ height:20px;
+ line-height:20px;
  }
  img.showimg{float:left;padding:5px;border:solid 3px #ccc;}
  dl.photoinfo
@@ -152,12 +152,11 @@ font-weight:bold;
  position:absolute;
  left:2px;
  top:2px;
- padding:10px 40px;
  }
  #goback a
  {
  color:#4D4D4D;
- font-size:450%;
+ font-size:300%;
  font-family:Georgia;
  font-style: italic;
  }
@@ -165,4 +164,32 @@ font-weight:bold;
  {
   color:#fff;
  }
- 
+ #pager
+ {
+ height:30px;
+ line-height:30px;
+ float:right;
+ }
+ #pager a,#pager a.visited,#pager span
+ {
+  padding:3px 6px;
+  color:#4D4D4D;
+  border:solid 1px #4D4D4D;
+  text-decoration:none;
+ }
+ #pager a:hover
+ {
+ border-color:#FFFFE1;
+ color:#FFFFE1;
+ }
+ #pager li
+ {
+float:left;
+margin-right:5px;
+ }
+ #pager span
+ {
+ color:#ccc;
+ border-color:transparent;
+ font-weight:bold;
+ }
