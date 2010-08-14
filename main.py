@@ -60,7 +60,7 @@ class AlbumPage(PublicPage):
         MAX_WEIGTH = 988
         MAX_HEIGHT = 700
         album = methods.GetAlbum(id)
-        pagesize = 20
+        pagesize = 32
         pagecount = 1
         if page is None:page = 1
         page = int(page)
@@ -70,15 +70,16 @@ class AlbumPage(PublicPage):
             pagecount = int(math.ceil(float(album.PhotoCount)/pagesize))
             offset = (page-1)*pagesize
             limit = offset + pagesize
-            _photos = album.Photos(offset,pagesize)
-            _photos = _photos[offset:limit]
-            for a in _photos:
-                a.left = random.randint(0,MAX_WEIGTH)
-                a.top=random.randint(0,400)
-                a.rot = random.randint(-40,40)
-                if a.top>MAX_HEIGHT-130 and a.left > MAX_WEIGTH-230 :
-                    a.top-=120+130
-                    a.left-=230
+            #_photos = album.Photos(offset,pagesize)
+            #_photos = _photos[offset:limit]
+            _photos = album.Photos(page,pagesize)
+            #for a in _photos:
+            #    a.left = random.randint(0,MAX_WEIGTH)
+            #    a.top=random.randint(0,400)
+            #    a.rot = random.randint(-40,40)
+            #    if a.top>MAX_HEIGHT-130 and a.left > MAX_WEIGTH-230 :
+            #        a.top-=120+130
+            #        a.left-=230
             template_value = {'photos':_photos,'album':album}
             template_value.update(page=page)
             template_value.update(pagecount = pagecount)

@@ -49,7 +49,7 @@ class PhotoList(AdminControl):
     @requires_admin
     def get(self,id):
         album = methods.GetAlbum(id)
-        photos = album.Photos()
+        photos = album.Photos(page=1,pagesize=1000)
         data = {'albums':methods.GetAllAlbums(),'photos':photos,'albumid':id}
         self.render('views/admin/photos.html',data)
     def post(self,id):

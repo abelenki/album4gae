@@ -4,6 +4,7 @@
 	width:100%;
 	height:580px;
 	position:relative;
+	text-align:center;
 }
 
 .pic, .pic a{
@@ -14,17 +15,29 @@
 }
 
 .pic{
+	float:left;
+	
+	border:solid 1px #4D4D4D;
+	padding:4px;
+	float:left;
+	margin:5px 10px 5px 0;
 	/* Styles specific to the pic class */
+	/*
 	position:absolute;
 	border:5px solid #EEEEEE;
 	border-bottom:18px solid #eeeeee;
-	
+	*/
 	/* CSS3 Box Shadow */
+	/*
 	-moz-box-shadow:2px 2px 3px #333333;
 	-webkit-box-shadow:2px 2px 3px #333333;
 	box-shadow:2px 2px 3px #333333;
+	*/
 }
-
+.pic:hover
+{
+  border-color:#fff;
+}
 .pic a{
 	/* Specific styles for the hyperlinks */
 	text-indent:-999px;
