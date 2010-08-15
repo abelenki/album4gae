@@ -3,28 +3,30 @@ $(document).ready(function(){
 
 	var preventClick=false;
 	
-	$(".pic a").bind("click",function(e){
-		/* This function stops the drag from firing a click event and showing the lightbox */
-		if(preventClick)
-		{
-			e.stopImmediatePropagation();
-			e.preventDefault();
-		}
-	});
+//	$(".pic a").bind("click",function(e){
+//		/* This function stops the drag from firing a click event and showing the lightbox */
+//		if(preventClick)
+//		{
+//			e.stopImmediatePropagation();
+//			e.preventDefault();
+//		}
+//	});
 
-	$(".pic").draggable({
-		/* Converting the images into draggable objects */
-		containment: 'parent',
-		start: function(e,ui){
-			/* This will stop clicks from occuring while dragging */
-			preventClick=true;
-		},
+	//$(".pic").draggable({
+		///* Converting the images into draggable objects */
+		//containment: 'parent',
+		//start: function(e,ui){
+			///* This will stop clicks from occuring while dragging */
+          
+			//preventClick=true;
+		//},
 		
-		stop: function(e, ui) {
-			/* Wait for 250 milliseconds before re-enabling the clicks */
-			setTimeout(function(){ preventClick=false; }, 250);
-		}
-	});
+		//stop: function(e, ui) {
+			///* Wait for 250 milliseconds before re-enabling the clicks */
+            
+			//setTimeout(function(){ preventClick=false; }, 250);
+		//}
+	//});
 
 
 	$('.pic').mousedown(function(e){
