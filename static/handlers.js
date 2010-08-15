@@ -64,7 +64,7 @@ function uploadProgress(file, bytesLoaded) {
 
 function uploadSuccess(file, serverData) {
 	try {
-		addImage("/s/" + serverData+'/');
+		addImage("/thumb/" + serverData+'.jpeg');
 
 		var progress = new FileProgress(file,  this.customSettings.upload_target);
 

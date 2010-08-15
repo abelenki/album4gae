@@ -8,6 +8,7 @@ import math
 import methods
 import logging
 import random
+import model
 def format_date(dt):
     return dt.strftime('%a, %d %b %Y %H:%M:%S GMT')
 
@@ -60,7 +61,7 @@ class AlbumPage(PublicPage):
         MAX_WEIGTH = 988
         MAX_HEIGHT = 700
         album = methods.GetAlbum(id)
-        pagesize = 32
+        pagesize = 40
         pagecount = 1
         if page is None:page = 1
         page = int(page)
@@ -132,9 +133,7 @@ def main():
     application = webapp.WSGIApplication(
                                        [('/(?P<page>[0-9]*)/?', MainPage),
                                         (r'/(?P<size>image)/(?P<id>[0-9]+)\.jpeg',GetImage),
-                                        (r'/(?P<size>m)/(?P<id>[0-9]+)\.jpeg',GetImage),
-                                        (r'/(?P<size>s)/(?P<id>[0-9]+)\.jpeg',GetImage),
-                                        (r'/(?P<size>c)/(?P<id>[0-9]+)\.jpeg',GetImage),
+                                        (r'/(?P<size>thumb)/(?P<id>[0-9]+)\.jpeg',GetImage),
                                         (r'/photo/(?P<id>[0-9]+)\.jpeg',ShowImage),
                                         (r'(?:/album/(?P<id>[0-9]+))?(?:/page/?(?P<page>[0-9]+))?/?',AlbumPage),
                                         (r'/album/(?P<id>[0-9]+)/gallery\.xml',Gallery),

@@ -38,7 +38,7 @@ class Albums(db.Model):
     def Cover(self):
         '''封面'''
         if self.CoverId > 0:
-            return 'http://%s/c/%s.jpeg' % (os.environ['HTTP_HOST'],self.CoverId)
+            return 'http://%s/thumb/%s.jpeg' % (os.environ['HTTP_HOST'],self.CoverId)
         return '/static/images/cover.jpg' 
     def AlbumUrl(self):
         return 'http://%s/alubm/%s' % (os.environ['HTTP_HOST'],self.key().id())

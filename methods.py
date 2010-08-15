@@ -79,9 +79,7 @@ def resizeImage(id,size="image"):
     if size=="image":return image
     img=images.Image(image.PhotoStream)
     width = height = 200
-    if size == 's':
-        width = height = 100
-    elif size =='c':
+    if size == 'thumb':
         width = 140
         height = 100
     img.resize(width,height)
