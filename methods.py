@@ -4,17 +4,37 @@ from google.appengine.api import memcache
 from google.appengine.api import images
 from getimageinfo import getImageInfo
 
+def cache(key="",time=3600):
+    def _decorate(method):
+        def _wrapper(*args, **kwargs):
+            val = memcache.get(key)
+            if val is None:
+                val = method(*args, **kwargs)
+                memcache.set(key,val,time)
+            return val
+        return _wrapper
+    return _decorate
+
+
 def CreateAlbum(user,name='',password=''):
     '''创建相册'''
     album = model.Albums(AlbumName=name,AlbumPassword=password,AlbumAuthor=user)
     album.Save()
+    memcache.delete('ALLALBUMS')
     return True
+@cache(key='ALLALBUMS',time=3600)
 def GetAllAlbums():
+
     albums=model.Albums().GetAll()
     return albums
 
 def GetAlbum(id):
-    return model.Albums().get_by_id(int(id))
+    cachekey='album_'+str(id)
+    data = memcache.get(cachekey)
+    if not data:
+        data = model.Albums().get_by_id(int(id))
+        memcache.set(cachekey,data,3600)
+    return data
 
 
 
@@ -24,6 +44,7 @@ def DeleteAlbum(id):
         for a in album.Photos():
             a.delete()
         album.Delete()
+    memcache.delete('ALLALBUMS')
 
 
 
@@ -51,15 +72,19 @@ def DeletePhoto(id):
 
 def GetPhoto(id):
     id=int(id)
-    photo = model.Photo().get_by_id(id)
-    data = {'photo':None,'prev':None,'next':None}    
-    if photo is not None:
-        photo.ViewCount+=1
-        photo.Update()
-        data['photo'] = photo
-        data['prev'] = photo.Prev()
-        
-        data['next'] = photo.Next() #model.Photo.all().filter("Album=",photo.Album).filter(" CreateTime >",photo.CreateTime).order("CreateTime").fetch(1)
+    cachekey='photo_'+str(id)
+
+    data = memcache.get(cachekey)
+    if not data:
+        photo = model.Photo().get_by_id(id)
+        data = {'photo':None,'prev':None,'next':None}    
+        if photo is not None:
+            #photo.ViewCount+=1
+            #photo.Update()
+            data['photo'] = photo
+            data['prev'] = photo.Prev()
+            data['next'] = photo.Next()
+            memcache.set(cachekey,data,3600)
     return data;    
 
 
