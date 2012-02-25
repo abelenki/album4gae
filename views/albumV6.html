@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}我的相册-{{album.AlbumName}}{% endblock %}
+{%block nav%}&gt;{{album.AlbumName}}{%endblock%}
+{% block script %}
+<link rel="stylesheet" type="text/css" href="/static/albumV6.css" />
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-darkness/jquery-ui.css" type="text/css" media="all" />
+<link rel="stylesheet" type="text/css" href="/static/fancybox/jquery.fancybox-1.2.6.css" />
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/static/fancybox/jquery.fancybox-1.2.6.pack.js"></script>
+<script type="text/javascript" src="/static/albumV6.js"></script>
+
+{% endblock %}
+
+{% block main %}
+<div id="goback"><a href="/" title="返回首页">Home</a></div>
+<div id="gallery">
+{%for p in photos%}
+<!--div id="pic-{{forloop.counter}}" class="pic" style="top:{{p.top}}px;left:{{p.left}}px;background:url(/c/{{p.id}}.jpeg) no-repeat 50% 50%; -moz-transform:rotate({{p.rot}}deg); -webkit-transform:rotate({{p.rot}}deg);"> 
+<a class="fancybox" rel="fncbx" href="/image/{{p.id}}.jpeg" target="_blank">colosseum</a> 
+</div-->
+<div id="pic-{{forloop.counter}}" class="pic" style="background:url(/thumb/{{p.id}}.jpeg) no-repeat 50% 50%;"> 
+<a class="fancybox" rel="fncbx" href="/image/{{p.id}}.jpeg" target="_blank">colosseum</a> 
+</div> 
+{%endfor%}
+<div class="clear"></div>
+ <!--div class="drop-box"></div-->
+</div>
+
+
+{% ifnotequal   pagecount  1 %}
+<div id="pager">
+<ul>
+   {% for p in pages %}
+        <li>
+        {% ifnotequal p   page %}
+            <a href="{{url}}/{{p}}/" title="转到第{{p}}页">{{p}}</a>
+        {% else %}
+            <span>{{p}}</span>
+        {% endifnotequal %}
+        </li>
+   {% endfor %}
+</ul>
+</div>
+{% endifnotequal %}
+<!--div id="modal" title="Share this picture">
+	<form action="">
+	<fieldset>
+		<label for="url">URL of the image</label>
+		<input type="text" name="url" id="url" class="text ui-widget-content ui-corner-all" onfocus="this.select()" />
+	</fieldset>
+	</form>
+
+</div-->
+{% endblock %}
+</body>
+</html>

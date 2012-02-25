@@ -1,0 +1,35 @@
+{% extends "adminbase.html" %}
+{% block title %}我的相册{% endblock %}
+{%block nav%}我的相册{%endblock%}
+
+{% block main %}
+
+<style type="text/css">
+ul.photos{
+float:left;
+
+}
+ul.photos li{
+float:left;
+padding:3px;
+
+height:120px;
+border:solid 2px #ccc;
+margin:3px;
+}
+</style>
+<h2></h2>
+<form action="/admin/{{albumid}}/" method="post">
+	<ul class="photos">
+	{% for p in photos %}
+	<li><img src="/thumb/{{p.id}}.jpeg" alt="" /><br /><input type="checkbox" name="deleteid" value="{{p.id}}" /></li>
+	{% endfor %}
+	</ul>
+	<div class="clear"></div>
+	<input type="submit" value="删除所选" class="button" name="delete"  />
+    <input type="submit" value="设为封面" class="button" name="setcover" />
+	<input type="hidden" value="{{albumid}}" name="alid" />
+</form>
+{% endblock %}
+</body>
+</html>
