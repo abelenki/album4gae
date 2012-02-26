@@ -16,7 +16,7 @@
  a:link,a:hover,a:visited,a:active
 {
 text-decoration:underline;
-color:#4F463F;
+color:#CCC;
 }
 a:hover{
 text-decoration:none;
@@ -106,11 +106,12 @@ font-weight:bold;
  clear:both;
  margin-top:20px;
  text-align:left;
- color:#4D4D4D;
  background:url(/static/appengine-noborder-120x30.gif) left center no-repeat;
  padding-left:150px;
  height:40px;
  line-height:40px;
+ font-size:11px;
+ font-family:verdana;
  }
  img.showimg{float:left;padding:5px;border:solid 3px #ccc;}
  dl.photoinfo
@@ -149,15 +150,15 @@ font-weight:bold;
  #goback
  {
  position:absolute;
- left:2px;
  top:2px;
  }
  #goback a
  {
  color:#4D4D4D;
- font-size:300%;
+ font-size:100%;
  font-family:Georgia;
  font-style: italic;
+ padding-right:5px;
  }
  #goback a:hover
  {
@@ -173,7 +174,7 @@ font-weight:bold;
  {
   padding:3px 6px;
   color:#4D4D4D;
-  border:solid 1px #4D4D4D;
+  /*border:solid 1px #4D4D4D;*/
   text-decoration:none;
  }
  #pager a:hover

@@ -62,6 +62,7 @@ def AddPhoto(name,description,mime,album,user,stream):
     photo.Size=len(stream)
     photo.FileType,photo.Width,photo.Height=getImageInfo(stream)
     photo.Save()
+    memcache.delete('ALLALBUMS')
     return photo
 
 def DeletePhoto(id):
@@ -70,6 +71,7 @@ def DeletePhoto(id):
         photo.Album.PhotoCount -=1
         photo.Album.put()
         photo.delete()
+        memcache.delete('ALLALBUMS')
 
 
 

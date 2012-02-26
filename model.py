@@ -33,8 +33,10 @@ class Albums(db.Model):
         return str(self.key().id())
     def Save(self):
         self.put()
+        memcache.delete('ALLALBUMS')
     def Delete(self):
         self.delete()
+        memcache.delete('ALLALBUMS')
     def Cover(self):
         '''封面'''
         if self.CoverId > 0:
