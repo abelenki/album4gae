@@ -3,6 +3,7 @@ import model
 from google.appengine.api import memcache
 from google.appengine.api import images
 from getimageinfo import getImageInfo
+from utility import cacheV2
 
 def cache(key="",time=3600):
     def _decorate(method):
@@ -22,18 +23,19 @@ def CreateAlbum(user,name='',password=''):
     album.Save()
     memcache.delete('ALLALBUMS')
     return True
+
+
+
 @cache(key='ALLALBUMS',time=3600)
 def GetAllAlbums():
 
     albums=model.Albums().GetAll()
     return albums
 
+
+@cacheV2('ALBUM_{id}')
 def GetAlbum(id):
-    cachekey='album_'+str(id)
-    data = memcache.get(cachekey)
-    if not data:
-        data = model.Albums().get_by_id(int(id))
-        memcache.set(cachekey,data,3600)
+    data = model.Albums().get_by_id(int(id))
     return data
 
 
@@ -70,36 +72,48 @@ def DeletePhoto(id):
         photo.delete()
 
 
-def GetPhoto(id):
-    id=int(id)
-    cachekey='photo_'+str(id)
 
-    data = memcache.get(cachekey)
-    if not data:
-        photo = model.Photo().get_by_id(id)
-        data = {'photo':None,'prev':None,'next':None}    
-        if photo is not None:
-            #photo.ViewCount+=1
-            #photo.Update()
-            data['photo'] = photo
-            data['prev'] = photo.Prev()
-            data['next'] = photo.Next()
-            memcache.set(cachekey,data,3600)
+
+
+
+@cacheV2('PHOTO_{id}')
+def GetPhoto(id):
+    '''根据ID获取单张相片'''
+    id=int(id)
+    photo = model.Photo().get_by_id(id)
+    return photo 
+
+    
+    if photo is not None:
+        #photo.ViewCount+=1
+        #photo.Update()
+        data['photo'] = photo
+        data['prev'] = photo.Prev()
+        data['next'] = photo.Next()
     return data;    
 
 
+@cacheV2('PREV_PHOTO_{id}')
+def PrevPhoto(id):
+    photo = GetPhoto(id)
+    if photo is not None:
+        return photo.Prev()
+    return None
+
+@cacheV2('NEXT_PHOTO_{id}')
+def NextPhoto(id):
+    photo = GetPhoto(id)
+    if photo is not None:
+        return Photo.Next()
+    return None
+
 
 def downImage(id,size="image"):
-    key=id+'_CACHE_'+size
-    image=memcache.get(key)
-    if not image:
-        image=resizeImage(id, size)
-        memcache.set(key,image,1800)
+    image = resizeImage(id,size)
     return image
 
 def resizeImage(id,size="image"):
     image=GetPhoto(id)
-    image = image['photo'];
     if not image:return None
     if size=="image":return image
     img=images.Image(image.PhotoStream)

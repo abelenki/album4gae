@@ -1,6 +1,8 @@
 #coding:utf-8
 import wsgiref.handlers
 import os
+from google.appengine.api import memcache
+
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.api import users
@@ -52,6 +54,9 @@ class PublicPage(webapp.RequestHandler):
     
 class MainPage(PublicPage):
     def get(self,page):
+        
+        if self.request.get('flush') is not None:
+            memcache.flush_all()
         albums=methods.GetAllAlbums()
         template_value={"albums":albums[:24],"isadmin":self.is_admin()}
         self.render('views/index.html', template_value)

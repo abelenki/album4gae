@@ -2,7 +2,7 @@
  body{font-size:12px;
   color:#ccc;
 	font-size:13px;
-	background: #222222;
+	background: #ffffff;
 	font-family:Arial, Helvetica, sans-serif;
  }
  h1,h2,h3,h4,h5,h6
@@ -107,11 +107,10 @@ font-weight:bold;
  margin-top:20px;
  text-align:left;
  color:#4D4D4D;
- /*background:url(http://code.google.com/appengine/images/appengine-noborder-120x30.gif) left center no-repeat;
+ background:url(/static/appengine-noborder-120x30.gif) left center no-repeat;
  padding-left:150px;
-*/
- height:20px;
- line-height:20px;
+ height:40px;
+ line-height:40px;
  }
  img.showimg{float:left;padding:5px;border:solid 3px #ccc;}
  dl.photoinfo
@@ -162,7 +161,7 @@ font-weight:bold;
  }
  #goback a:hover
  {
-  color:#fff;
+  color:#4D4D4D;
  }
  #pager
  {
@@ -180,7 +179,7 @@ font-weight:bold;
  #pager a:hover
  {
  border-color:#FFFFE1;
- color:#FFFFE1;
+ color:#ccc;
  }
  #pager li
  {
