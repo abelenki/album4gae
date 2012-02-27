@@ -16,8 +16,8 @@
 <div id="goback"><a href="/" title="返回首页">Home</a>&rsaquo;&rsaquo;{{album.AlbumName}}</div>
 <div id="gallery">
 {%for p in photos%}
-<div id="pic-{{forloop.counter}}" class="pic" style="background:url(/thumb/{{p.id}}.jpeg) no-repeat 50% 50%;"> 
-<a class="fancybox" rel="fncbx" href="/image/{{p.id}}.jpeg" target="_blank">colosseum</a> 
+<div id="pic-{{forloop.counter}}" class="pic" style="background:url({{p.imgurl}}!thumb) no-repeat 50% 50%;"> 
+<a class="fancybox" rel="fncbx" href="{{p.imgurl}}" target="_blank">colosseum</a> 
 </div> 
 {%endfor%}
 <div class="clear"></div>

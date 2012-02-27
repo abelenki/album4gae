@@ -12,9 +12,16 @@ from django.utils import simplejson
 
 adminFlag=True
 
-
+SITE_CONFIG = None
 
 class AdminControl(webapp.RequestHandler):
+    def __init__(self):
+        super(AdminControl,self).__init__()
+        global SITE_CONFIG
+        SITE_CONFIG =  model.Settings().initSettings()
+        logging.info('initConfig:'+str(SITE_CONFIG))
+        #print SITE_CONFIG
+        
     def render(self,template_file,template_value):
         path=os.path.join(os.path.dirname(__file__),template_file)
         self.response.out.write(template.render(path, template_value))
@@ -31,6 +38,30 @@ def requires_admin(method):
         else:
             return method(self, *args, **kwargs)
     return wrapper
+
+
+class AdminSettings(AdminControl):
+    @requires_admin
+    def get(self):
+        global SITE_CONFIG
+        self.render('views/admin/setting.html',{'setting':SITE_CONFIG})
+    def post(self):
+        SiteTitle = self.request.get('SiteTitle')
+        SubSiteTitle = self.request.get('SubSiteTitle')
+        EnableUpYun = self.request.get('EnableUpYun')
+        UpYunBucket = self.request.get('UpYunBucket')
+        UpYunUser   = self.request.get('UpYunUser')
+        UpYunPass   = self.request.get('UpYunPass')
+        config = model.Settings().get()
+        config.SiteTitle = SiteTitle
+        config.SubSiteTitle = SubSiteTitle
+        config.EnableUpYun = EnableUpYun == "1" 
+        config.UpYunBucket = UpYunBucket
+        config.UpYunUser = UpYunUser
+        config.UpYunPass = UpYunPass
+        config.save()
+        self.redirect('/admin/settings/')
+
 
 class AdminMain(AdminControl):
     @requires_admin
@@ -127,7 +158,7 @@ def main():
     webapp.template.register_template_library('filter')
     application = webapp.WSGIApplication(
                    [(r'/admin/upload/', Admin_Upload),
-                  
+                    (r'/admin/settings/', AdminSettings),
                     (r'/admin/deleteAlbum/(?P<id>[0-9]+)/',AdminDeleteAlbum),
                     (r'/admin/albums/', Admin_CreateAlbum),
                     (r'/admin/',AdminMain),

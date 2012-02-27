@@ -6,6 +6,9 @@ from google.appengine.api import memcache
 from google.appengine.api import mail
 from google.appengine.api import urlfetch
 
+
+
+
 class Comment(db.Model):
     Author = db.StringProperty()
     Ip = db.StringProperty()
@@ -69,6 +72,7 @@ class Photo(db.Model):
     PhotoStream = db.BlobProperty()
     Album = db.ReferenceProperty(Albums) 
     Comments = db.ReferenceProperty(Comment)
+    imgurl = db.StringProperty()
     #left    = db.IntegerProperty(default=0)
     #top     = db.IntegerProperty(default=0)
     #rot     = db.IntegerProperty(default=0)
@@ -78,7 +82,6 @@ class Photo(db.Model):
         '''添加或修改'''
         self.put()
         self.Album.PhotoCount +=1
-        
         self.Album.Save()
     def PhotoUrl(self):
         return "http://%s/photo/%s.jpeg" %(os.environ['HTTP_HOST'],self.key().id())
@@ -100,10 +103,30 @@ class Settings(db.Model):
     SubSiteTitle = db.StringProperty(default='')
     Version = 1.0
     Timedelta = db.FloatProperty(default = 8.0)
+    EnableUpYun = db.BooleanProperty(default=True)
+    UpYunBucket = db.StringProperty(default='')
+    UpYunUser   = db.StringProperty(default='')
+    UpYunPass   = db.StringProperty(default='')
+
+    def __str__(self):
+        return   self.SubSiteTitle+'&'+str(self.EnableUpYun)+'&'+self.UpYunBucket+'&'+self.UpYunUser+'&'+self.UpYunPass+'&'
     def id (self):
         return str(self.key().id())
-    def Save(self,key,value):
+    def Save(self):
+        self.delete()
         self.put()
+        memcache.delete('SITE_CONFIG')
+    def get(self):
+        return Settings.all().fetch(1)[0]
     def initSettings(self):
-        pass
+        SITE_CONFIG =  memcache.get('SITE_CONFIG')
+        if SITE_CONFIG is None:
+            SITE_CONFIG = Settings.all().fetch(1)
+            if len(SITE_CONFIG) == 0:
+                self.put()
+                SITE_CONFIG = self
+            else:
+                SITE_CONFIG = SITE_CONFIG[0]
+            memcache.set('SITE_CONFIG',SITE_CONFIG,3600)
+        return SITE_CONFIG
 

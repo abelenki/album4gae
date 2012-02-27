@@ -5,6 +5,8 @@ from google.appengine.api import images
 from getimageinfo import getImageInfo
 from utility import cacheV2
 
+from upyun import UpYun,md5,md5file
+
 def cache(key="",time=3600):
     def _decorate(method):
         def _wrapper(*args, **kwargs):
@@ -50,7 +52,7 @@ def DeleteAlbum(id):
 
 
 
-def AddPhoto(name,description,mime,album,user,stream):
+def AddPhoto(name,description,mime,album,user,stream,imgurl=''):
     'Add Photo'
     photo = model.Photo()
     photo.Album = album
@@ -58,9 +60,10 @@ def AddPhoto(name,description,mime,album,user,stream):
     photo.Description = description
     photo.Mime = mime
     photo.Name = name
-    photo.PhotoStream = stream
+    photo.PhotoStream = None
     photo.Size=len(stream)
     photo.FileType,photo.Width,photo.Height=getImageInfo(stream)
+    photo.imgurl = imgurl
     photo.Save()
     memcache.delete('ALLALBUMS')
     return photo
@@ -68,6 +71,10 @@ def AddPhoto(name,description,mime,album,user,stream):
 def DeletePhoto(id):
     photo =  model.Photo().get_by_id(int(id))
     if photo is not None:
+        u = UpYun()
+        if photo.imgurl is not None:
+            path = photo.imgurl.replace('http://imgstore.b0.upaiyun.com','')
+            u.delete(path)
         photo.Album.PhotoCount -=1
         photo.Album.put()
         photo.delete()
@@ -117,6 +124,12 @@ def downImage(id,size="image"):
 def resizeImage(id,size="image"):
     image=GetPhoto(id)
     if not image:return None
+
+    #upyun api
+    if size!='image':
+        return image.imgurl+'!thumb'
+    return  image.imgurl
+
     if size=="image":return image
     img=images.Image(image.PhotoStream)
     width = height = 200

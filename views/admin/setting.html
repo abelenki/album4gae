@@ -1,0 +1,38 @@
+{% extends "adminbase.html" %}
+{% block title %}我的相册{% endblock %}
+{%block nav%}我的相册{%endblock%}
+{%block script%}
+
+    {%endblock%}
+{% block main %}
+
+<form id="upload_form" action="" method="post">
+  <fieldset>
+  <legend>站点配置</legend>
+<p><label>站点名称</label></p>
+<p><input type="text" name="SiteTitle" class="input"  value="{{setting.SiteTitle}}"/></p>
+
+<p><label>站点子名称</label></p>
+<p><input type="text" name="SubSiteTitle" class="input"  value="{{setting.SubSiteTitle}}"/>
+
+
+<p><label>是否启用UpYun</label></p>
+<p><input type="checkbox" name="EnableUpYun" value="1" {% ifequal   setting.EnableUpYun  1 %}checked="checked"{%endifequal%}/>启用
+
+
+<p><label>UpYunBucket</label></p>
+<p><input type="text" name="UpYunBucket" class="input" value="{{setting.UpYunBucket}}"/>
+
+<p><label>UpYunUser</label></p>
+<p><input type="text" name="UpYunUser" class="input" value="{{setting.UpYunUser}}"/>
+
+<p><label>UpYunPass</label></p>
+<p><input type="text" name="UpYunPass" class="input" value="{{setting.UpYunPass}}"/>    
+
+<p><input type="submit" value="保存" class="button"/></p>
+
+</form>
+  </fieldset>
+{% endblock %}
+</body>
+</html>

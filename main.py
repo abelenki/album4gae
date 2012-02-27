@@ -11,6 +11,13 @@ import methods
 import logging
 import random
 import model
+import time
+
+import datetime
+
+from upyun import UpYun,md5,md5file
+
+
 def format_date(dt):
     return dt.strftime('%a, %d %b %Y %H:%M:%S GMT')
 
@@ -25,19 +32,25 @@ class SwfUpload(webapp.RequestHandler):
        
         if not bf:
             return self.redirect('/admin/upload/')
-#        name=self.request.body_file.vars['file'].filename
-        #mime = self.request.body_file.vars['Filedata'].headers['content-type']
-        #if mime.find('image')==-1:
-        #    return self.redirect('/admin/upload/')
-        description=self.request.get("Description")
-        name = self.request.get("Name")
-        album = model.Albums().get_by_id(int(self.request.get("album")))
-        image=methods.AddPhoto(name,description,'images/jpg',album,users.get_current_user(),bf)
-        self.response.out.write(image.id())
+        u = UpYun()
+        path = '/album/'+ datetime.datetime.now().strftime('%m')+ '/'+datetime.datetime.now().strftime('%Y%m%d-%H%M%S')+'.jpg'
+        a = u.writeFile(path,bf,True)
+        if a == True:
+            description=self.request.get("Description")
+            name = self.request.get("Name")
+            album = model.Albums().get_by_id(int(self.request.get("album")))
+            imageurl = 'http://imgstore.b0.upaiyun.com'+path
+            image = methods.AddPhoto(name,description,'images/jpg',album,users.get_current_user(),bf,imageurl)
+            self.response.out.write(image.id())
         return
 
 
 class PublicPage(webapp.RequestHandler):
+    def __init__(self):
+        super(PublicPage,self).__init__()
+        setting = model.Settings()
+        setting.initSettings()
+        
     def render(self, template_file, template_value):
         path = os.path.join(os.path.dirname(__file__), template_file)
         self.response.out.write(template.render(path, template_value))
@@ -124,10 +137,11 @@ class GetImage(PublicPage):
         image=methods.downImage(id, size)
         if not image:
             return self.error(404)
-        self.response.headers['Content-Type'] = str(image.Mime) 
-        self.response.headers['Cache-Control']="max-age=315360000"
-        self.response.headers['Last-Modified']=format_date(image.CreateTime)
-        self.response.out.write(image.PhotoStream)
+        self.redirect(image) 
+        #self.response.headers['Content-Type'] = str(image.Mime) 
+        #self.response.headers['Cache-Control']="max-age=315360000"
+        #self.response.headers['Last-Modified']=format_date(image.CreateTime)
+        #self.response.out.write(image.PhotoStream)
 
 class Error(PublicPage):
     def get(self):
