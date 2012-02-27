@@ -42,6 +42,9 @@ class SwfUpload(webapp.RequestHandler):
             imageurl = 'http://imgstore.b0.upaiyun.com'+path
             image = methods.AddPhoto(name,description,'images/jpg',album,users.get_current_user(),bf,imageurl)
             self.response.out.write(image.id())
+        else:
+            logging.info('upload image to upyun error:'+str(a))
+            self.response.out.write(0)
         return
 
 

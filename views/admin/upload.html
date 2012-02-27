@@ -18,7 +18,7 @@
                 },
 
 				// File Upload Settings
-				file_size_limit : "1 MB",
+				file_size_limit : "2 MB",
 				file_types : "*.jpg",
 				file_types_description : "JPG Images",
 				file_upload_limit : "0",    // Zero means unlimited
@@ -39,7 +39,7 @@
 				button_placeholder_id : "spanButtonPlaceholder",
 				button_width: 160,
 				button_height: 22,
-				button_text : '<span class="button">Select Images <span class="buttonSmall">(1 MB Max)</span></span>',
+				button_text : '<span class="button">Select Images <span class="buttonSmall">(2 MB Max)</span></span>',
 				button_text_style : '.button { font-family: Helvetica, Arial, sans-serif; font-size: 14pt; } .buttonSmall { font-size: 10pt; }',
 				button_text_top_padding: 1,
 				button_text_left_padding: 5,
@@ -100,8 +100,9 @@
 <p><input type="file" name="Filedata" id="Filedata" /></p>
 <p><input type="submit" value="上传" class="button"/></p>
 -->
-</form>
+
   </fieldset>
+  </form>
 {% endblock %}
 </body>
 </html>

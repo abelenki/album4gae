@@ -27,3 +27,6 @@ handlers:
 - url: .*
   script: main.py
   secure: optional
+
+builtins:
+- datastore_admin: on

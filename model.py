@@ -7,7 +7,7 @@ from google.appengine.api import mail
 from google.appengine.api import urlfetch
 
 
-
+settings = None
 
 class Comment(db.Model):
     Author = db.StringProperty()
@@ -113,20 +113,29 @@ class Settings(db.Model):
     def id (self):
         return str(self.key().id())
     def Save(self):
-        self.delete()
+        logging.info(str(self))
         self.put()
         memcache.delete('SITE_CONFIG')
     def get(self):
-        return Settings.all().fetch(1)[0]
-    def initSettings(self):
-        SITE_CONFIG =  memcache.get('SITE_CONFIG')
-        if SITE_CONFIG is None:
-            SITE_CONFIG = Settings.all().fetch(1)
-            if len(SITE_CONFIG) == 0:
-                self.put()
-                SITE_CONFIG = self
-            else:
-                SITE_CONFIG = SITE_CONFIG[0]
-            memcache.set('SITE_CONFIG',SITE_CONFIG,3600)
-        return SITE_CONFIG
+        return Settings.get_by_key_name('default')
+    
 
+
+def InitData():
+    settings = Settings(key_name = 'default')
+    settings.save()
+    return settings
+
+def site_init():
+    global settings
+    settings = memcache.get('SITE_CONFIG')
+    logging.info('site_init:'+str(settings))
+    if  settings is None:
+        settings = Settings.get_by_key_name('default')
+        logging.info('site_init get:'+str(settings))
+        if settings is None:
+            settings = InitData()
+            memcache.set('SITE_CONFIG',settings,3600)
+            logging.info('site_init initdate:'+str(settings))
+    
+site_init()

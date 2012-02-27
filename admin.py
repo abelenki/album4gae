@@ -9,17 +9,18 @@ import methods,logging
 import model
 from django.utils import simplejson
 
+from model import settings
 
 adminFlag=True
 
-SITE_CONFIG = None
+
 
 class AdminControl(webapp.RequestHandler):
     def __init__(self):
         super(AdminControl,self).__init__()
-        global SITE_CONFIG
-        SITE_CONFIG =  model.Settings().initSettings()
-        logging.info('initConfig:'+str(SITE_CONFIG))
+        #global SITE_CONFIG
+        #SITE_CONFIG =  model.Settings().initSettings()
+        #logging.info('initConfig:'+str(SITE_CONFIG))
         #print SITE_CONFIG
         
     def render(self,template_file,template_value):
@@ -43,8 +44,7 @@ def requires_admin(method):
 class AdminSettings(AdminControl):
     @requires_admin
     def get(self):
-        global SITE_CONFIG
-        self.render('views/admin/setting.html',{'setting':SITE_CONFIG})
+        self.render('views/admin/setting.html',{'setting':settings})
     def post(self):
         SiteTitle = self.request.get('SiteTitle')
         SubSiteTitle = self.request.get('SubSiteTitle')
@@ -53,13 +53,15 @@ class AdminSettings(AdminControl):
         UpYunUser   = self.request.get('UpYunUser')
         UpYunPass   = self.request.get('UpYunPass')
         config = model.Settings().get()
+        if config is None:
+            config = model.Settings(key_name = 'default')
         config.SiteTitle = SiteTitle
         config.SubSiteTitle = SubSiteTitle
         config.EnableUpYun = EnableUpYun == "1" 
         config.UpYunBucket = UpYunBucket
         config.UpYunUser = UpYunUser
         config.UpYunPass = UpYunPass
-        config.save()
+        config.Save()
         self.redirect('/admin/settings/')
 
 
