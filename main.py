@@ -35,6 +35,7 @@ class SwfUpload(webapp.RequestHandler):
         u = UpYun()
         path = '/album/'+ datetime.datetime.now().strftime('%m')+ '/'+datetime.datetime.now().strftime('%Y%m%d-%H%M%S')+'.jpg'
         a = u.writeFile(path,bf,True)
+        logging.info('upload result:'+str(a))
         if a == True:
             description=self.request.get("Description")
             name = self.request.get("Name")
@@ -51,8 +52,8 @@ class SwfUpload(webapp.RequestHandler):
 class PublicPage(webapp.RequestHandler):
     def __init__(self):
         super(PublicPage,self).__init__()
-        setting = model.Settings()
-        setting.initSettings()
+        #setting = model.Settings()
+        #setting.initSettings()
         
     def render(self, template_file, template_value):
         path = os.path.join(os.path.dirname(__file__), template_file)
