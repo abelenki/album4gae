@@ -206,7 +206,7 @@ class UpYun(object):
             return None
     
     def _net_worker(self, method, path, data='', headers={}, metadata={}):
-        connection = httplib.HTTPConnection(self.thehost,timeout=30)
+        connection = httplib.HTTPConnection(self.thehost,timeout=300)
 
         if self.content_md5 != '':
             headers['Content-MD5'] = self.content_md5

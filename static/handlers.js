@@ -64,8 +64,12 @@ function uploadProgress(file, bytesLoaded) {
 
 function uploadSuccess(file, serverData) {
 	try {
-		addImage("/thumb/" + serverData+'.jpeg');
-
+		
+		//for (var item in file) {  
+   		//	 alert("item:" + item+'='+file[item]);  
+		//}  
+		//addImage("/thumb/" + serverData+'.jpeg');
+		addImage(serverData);
 		var progress = new FileProgress(file,  this.customSettings.upload_target);
 
 		//progress.setStatus("Thumbnail Created.");
@@ -137,6 +141,8 @@ function uploadError(file, errorCode, message) {
 
 
 function addImage(src) {
+
+	//src = '/static/images/'+src;
 	var newImg = document.createElement("img");
 	newImg.style.margin = "5px";
 
