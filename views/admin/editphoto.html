@@ -1,0 +1,27 @@
+{% extends "adminbase.html" %}
+{% block title %}修改相片{% endblock %}
+{%block nav%}修改相片{%endblock%}
+<style type="text/javascript">
+#body{border:none;width:90%;}
+html{overflow:hidden;}
+</style>
+{% block main %}
+
+
+   <form action="/admin/editphoto/{{photo.id}}/" method="POST">
+    <p>
+<img src="{{photo.imgurl}}!thumb" /> 
+   </p>
+    <p><label>图片名称</label></p>
+    <p><input type="text" name="Name" value="{{photo.Name}}" class="input" /></p>
+    <p><label>描述</label></p>
+    <p><input type="text" name="Description" value="{{photo.Description}}" class="input" /></p>
+    <p><input type="submit" value="保存" class="button" />
+    <input type="hidden" name="id" value="{{photo.id}}" />
+    </p>
+
+   </form>
+
+{% endblock %}
+</body>
+</html>

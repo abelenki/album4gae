@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}我的相册-{{image.photo.Album.AlbumName}}{% endblock %}
+{% block title %}{{image.photo.Album.AlbumName}}{% endblock %}
 {%block nav%}&gt;<a href="/album/{{image.photo.Album.id}}/">{{image.photo.Album.AlbumName}}</a>&gt; {{image.photo.Name|escape}}{%endblock%}
 
 {% block script%}

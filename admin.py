@@ -8,7 +8,7 @@ from google.appengine.api import users
 import methods,logging
 import model
 from django.utils import simplejson
-
+from google.appengine.api import memcache
 from model import settings
 
 adminFlag=True
@@ -52,9 +52,8 @@ class AdminSettings(AdminControl):
         UpYunBucket = self.request.get('UpYunBucket')
         UpYunUser   = self.request.get('UpYunUser')
         UpYunPass   = self.request.get('UpYunPass')
-        config = model.Settings().get()
-        if config is None:
-            config = model.Settings(key_name = 'default')
+        model.site_init()
+        config = model.settings
         config.SiteTitle = SiteTitle
         config.SubSiteTitle = SubSiteTitle
         config.EnableUpYun = EnableUpYun == "1" 
@@ -83,7 +82,7 @@ class PhotoList(AdminControl):
     def get(self,id):
         album = methods.GetAlbum(id)
         photos = album.Photos(page=1,pagesize=1000)
-        data = {'albums':methods.GetAllAlbums(),'photos':photos,'albumid':id}
+        data = {'albums':methods.GetAllAlbums(),'photos':photos,'albumid':id,'settings':model.settings}
         self.render('views/admin/photos.html',data)
     def post(self,id):
         alid = int(self.request.get('alid'))
@@ -143,6 +142,21 @@ class AdminEditAlbum(AdminControl):
         #self.redirect('/admin/albums/')
         self.response.out.write('<script type="text/javascript">window.parent.location.reload();</script>')
 
+
+class AdminEditPhoto(AdminControl):
+    @requires_admin
+    def get(self,id,*avg):
+        photo = methods.GetPhoto(int(id))
+        self.render('views/admin/editphoto.html',{'photo':photo})
+    def post(self,id,*avg):
+        photo = methods.GetPhoto(int(id))
+        photo.Name = self.request.get('Name')
+        photo.Description = self.request.get('Description')
+        photo.Update()
+        memcache.delete('PHOTO_'+str(id))
+        self.response.out.write('<script type="text/javascript">window.parent.location.reload();</script>')
+
+
 class AdminDeleteAlbum(AdminControl):
     @requires_admin
     def get(self,id):
@@ -168,6 +182,7 @@ def main():
                     (r'/admin/left/',AdminLeft),
                     (r'/admin/top/',AdminTop),
                     (r'/admin/edit/(?P<id>[0-9]+)/(.*)',AdminEditAlbum),
+                    (r'/admin/editphoto/(?P<id>[0-9]+)/(.*)',AdminEditPhoto),
                    ], debug=True)
     wsgiref.handlers.CGIHandler().run(application)
 

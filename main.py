@@ -52,7 +52,7 @@ class SwfUpload(webapp.RequestHandler):
 class PublicPage(webapp.RequestHandler):
     def __init__(self):
         super(PublicPage,self).__init__()
-        #setting = model.Settings()
+        setting = model.settings
         #setting.initSettings()
         
     def render(self, template_file, template_value):
@@ -75,15 +75,22 @@ class MainPage(PublicPage):
         if self.request.get('flush') is not None:
             memcache.flush_all()
         albums=methods.GetAllAlbums()
-        template_value={"albums":albums[:24],"isadmin":self.is_admin()}
-        self.render('views/index.html', template_value)
+        template_value={"albums":albums[:24],"isadmin":self.is_admin(),"config":model.settings}
+        self.render('views/index.js.html', template_value)
+
+
+class CrossDomain(PublicPage):
+    def get(self):
+        self.response.headers['Content-Type'] = 'text/xml' 
+        
+        self.render('views/crossdomain.xml',{})
 
 class AlbumPage(PublicPage):
     def get(self,id,page):
         MAX_WEIGTH = 988
         MAX_HEIGHT = 700
         album = methods.GetAlbum(id)
-        pagesize = 40
+        pagesize = 1000
         pagecount = 1
         if page is None:page = 1
         page = int(page)
@@ -103,13 +110,13 @@ class AlbumPage(PublicPage):
             #    if a.top>MAX_HEIGHT-130 and a.left > MAX_WEIGTH-230 :
             #        a.top-=120+130
             #        a.left-=230
-            template_value = {'photos':_photos,'album':album}
+            template_value = {'photos':_photos,'album':album,'config':model.settings}
             template_value.update(page=page)
             template_value.update(pagecount = pagecount)
             template_value.update(pages = range(1,pagecount + 1))
             template_value.update(pagesize=pagesize)
             template_value.update(url=('/album/%s/page' % id))
-            self.render('views/albumV6.html',template_value)
+            self.render('views/album.js.html',template_value)
 
 
 class Gallery(PublicPage):
@@ -161,6 +168,7 @@ def main():
                                         (r'(?:/album/(?P<id>[0-9]+))?(?:/page/?(?P<page>[0-9]+))?/?',AlbumPage),
                                         (r'/album/(?P<id>[0-9]+)/gallery\.xml',Gallery),
                                         (r'/SwfUpload/',SwfUpload),
+                                        (r'/crossdomain\.xml',CrossDomain),
                                         ('.*',Error)
                                        ], debug=True)
     wsgiref.handlers.CGIHandler().run(application)

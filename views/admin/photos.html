@@ -13,7 +13,7 @@ ul.photos li{
 float:left;
 padding:3px;
 
-height:120px;
+/*height:120px;*/
 border:solid 2px #ccc;
 margin:3px;
 }
@@ -22,7 +22,10 @@ margin:3px;
 <form action="/admin/{{albumid}}/" method="post">
 	<ul class="photos">
 	{% for p in photos %}
-	<li><img src="{{p.imgurl}}!thumb" alt="" /><br /><input type="checkbox" name="deleteid" value="{{p.id}}" /></li>
+	<li><img src="{{p.imgurl}}!thumb" alt="" /><br />
+		{{p.Name}}<br />
+<a href="/admin/editphoto/{{p.id}}/?keepThis=true&TB_iframe=true&height=400&width=450&" class="thickbox" >[修改]</a>
+        <input type="checkbox" name="deleteid" value="{{p.id}}" /></li>
 	{% endfor %}
 	</ul>
 	<div class="clear"></div>

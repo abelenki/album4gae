@@ -5,7 +5,7 @@ from google.appengine.ext import db
 from google.appengine.api import memcache
 from google.appengine.api import mail
 from google.appengine.api import urlfetch
-
+import datetime
 
 settings = None
 
@@ -50,8 +50,12 @@ class Albums(db.Model):
     def GetAll(self):
         return Albums.all().order('DisplayOrder').order('-LastUpdate').fetch(1000)
     def Photos(self,page=1,pagesize=20):
-        limit = (page - 1) * pagesize
-        data = db.GqlQuery("SELECT * FROM Photo where Album = :1 ORDER BY CreateTime DESC LIMIT "+str(limit)+","+str(pagesize) , self)
+        cachekey = "PHOTOLIST_%s_%d_%d" % (self.id(),page,pagesize)
+        data = memcache.get(cachekey)
+        if not data:
+            limit = (page - 1) * pagesize
+            data = db.GqlQuery("SELECT * FROM Photo where Album = :1 ORDER BY CreateTime DESC LIMIT "+str(limit)+","+str(pagesize) , self)
+            memcache.set(cachekey,data,3600)            
         return data
         #return Photo.all().filter('Album =',self).order('-CreateTime').fetch(limit,offset)
 
@@ -83,9 +87,11 @@ class Photo(db.Model):
         self.put()
         self.Album.PhotoCount +=1
         self.Album.Save()
+
     def PhotoUrl(self):
         return "http://%s/photo/%s.jpeg" %(os.environ['HTTP_HOST'],self.key().id())
     def Update(self):
+        
         self.put()
     def Prev(self):
         prev =  Photo.all().filter('Album',self.Album).filter('CreateTime < ',self.CreateTime).order('-CreateTime').fetch(1)
@@ -113,9 +119,12 @@ class Settings(db.Model):
     def id (self):
         return str(self.key().id())
     def Save(self):
-        logging.info(str(self))
+        
         self.put()
-        memcache.delete('SITE_CONFIG')
+        val = memcache.delete('SITE_CONFIG')
+        logging.info('Delete cache SITE_CONFIG is %s,new data is %s' % (str(val),str(self)))
+        global settings
+        settings = None
     def get(self):
         return Settings.get_by_key_name('default')
     
@@ -127,15 +136,18 @@ def InitData():
     return settings
 
 def site_init():
-    global settings
     settings = memcache.get('SITE_CONFIG')
-    logging.info('site_init:'+str(settings))
+    
     if  settings is None:
         settings = Settings.get_by_key_name('default')
-        logging.info('site_init get:'+str(settings))
+    
         if settings is None:
             settings = InitData()
-            memcache.set('SITE_CONFIG',settings,3600)
-            logging.info('site_init initdate:'+str(settings))
     
-site_init()
+        val = memcache.set('SITE_CONFIG',settings,3600)
+    
+    return settings
+
+
+
+settings =  site_init()
