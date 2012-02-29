@@ -67,14 +67,14 @@ ul.iw_thumbs li img{
 	border:7px solid #fff;
 	cursor:pointer;
 	position:relative;
-	-moz-box-shadow:1px 1px 1px #aaa;
-	-webkit-box-shadow:1px 1px 1px #aaa;
-	box-shadow:1px 1px 1px #aaa;
+	-moz-box-shadow:5px 5px 5px #aaa;
+	-webkit-box-shadow:5px 5px 5px #aaa;
+	box-shadow:5px 5px 5px#aaa;
 }
 ul.iw_thumbs li img:hover{
-	-moz-box-shadow:1px 1px 7px #777;
-	-webkit-box-shadow:1px 1px 7px #777;
-	box-shadow:1px 1px 7px #777;
+	-moz-box-shadow:5px 5px 10px  #777;
+	-webkit-box-shadow:5px 5px 10px #777;
+	box-shadow:5px 5px 10px  #777;
 }
 ul.iw_thumbs li:nth-child(even) img{
 	height:60px;
@@ -184,6 +184,7 @@ ul.iw_thumbs li:nth-child(7n) img{
 	-webkit-box-shadow:0px 0px 20px #333333; 
 	box-shadow:0px 0px 20px #333333;
 	border:solid 1px #ccc;
+	height:110px;
 }
 #iw_thumbs_index li p{
 	text-align:center;

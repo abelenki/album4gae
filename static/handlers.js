@@ -141,7 +141,7 @@ function uploadError(file, errorCode, message) {
 
 
 function addImage(src) {
-	alert(src);
+	
 	//src = '/static/images/'+src;
 	var newImg = document.createElement("img");
 	newImg.style.margin = "5px";

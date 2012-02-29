@@ -10,7 +10,7 @@ import model
 from django.utils import simplejson
 from google.appengine.api import memcache
 from model import settings
-
+import upyun
 adminFlag=True
 
 
@@ -75,7 +75,14 @@ class AdminLeft(AdminControl):
 class AdminTop(AdminControl):
     @requires_admin
     def get (self):
-        self.render('views/admin/top.html',{'username':users.get_current_user(),'logouturl':users.create_logout_url('http://'+os.environ['HTTP_HOST'])})
+        yun= upyun.UpYun()
+        diskUsage = 0
+        diskUsage = (yun.getBucketUsage()+.0)/1024/1024
+
+        self.render('views/admin/top.html',{'username':users.get_current_user(),
+            'logouturl':users.create_logout_url('http://'+os.environ['HTTP_HOST']),
+            'usage':'%.2f M'%(diskUsage)
+            })
 
 class PhotoList(AdminControl):
     @requires_admin

@@ -48,7 +48,7 @@ class Albums(db.Model):
     def AlbumUrl(self):
         return 'http://%s/alubm/%s' % (os.environ['HTTP_HOST'],self.key().id())
     def GetAll(self):
-        return Albums.all().order('DisplayOrder').order('-LastUpdate').fetch(1000)
+        return Albums.all().order('DisplayOrder').fetch(1000)
     def Photos(self,page=1,pagesize=20):
         cachekey = "PHOTOLIST_%s_%d_%d" % (self.id(),page,pagesize)
         data = memcache.get(cachekey)

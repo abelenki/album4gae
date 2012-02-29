@@ -53,6 +53,10 @@ class PublicPage(webapp.RequestHandler):
     def __init__(self):
         super(PublicPage,self).__init__()
         setting = model.settings
+        yun= UpYun()
+        diskUsage = 0
+        diskUsage = (yun.getBucketUsage()+.0)/1024/1024
+        self.usage = '%.2f M'%(diskUsage)
         #setting.initSettings()
         
     def render(self, template_file, template_value):
@@ -75,7 +79,9 @@ class MainPage(PublicPage):
         if self.request.get('flush') is not None:
             memcache.flush_all()
         albums=methods.GetAllAlbums()
-        template_value={"albums":albums[:24],"isadmin":self.is_admin(),"config":model.settings}
+        template_value={"albums":albums[:24],"isadmin":self.is_admin(),"config":model.settings,
+        'usage':self.usage
+        }
         self.render('views/index.js.html', template_value)
 
 
@@ -110,7 +116,7 @@ class AlbumPage(PublicPage):
             #    if a.top>MAX_HEIGHT-130 and a.left > MAX_WEIGTH-230 :
             #        a.top-=120+130
             #        a.left-=230
-            template_value = {'photos':_photos,'album':album,'config':model.settings}
+            template_value = {'photos':_photos,'album':album,'config':model.settings,'usage':self.usage}
             template_value.update(page=page)
             template_value.update(pagecount = pagecount)
             template_value.update(pages = range(1,pagecount + 1))
