@@ -11,6 +11,10 @@ html{overflow:hidden;}
    <form action="/admin/edit/{{album.id}}/" method="POST">
     <p><label>相册名称</label></p>
 	<p><input type="text" name="AlbumName" value="{{album.AlbumName}}" class="input" /></p>
+
+	<p><label>相册描述</label></p>
+	<p><textarea name="Summary" class="textarea">{{album.Summary}}</textarea></p>
+
 	<p><label>排序</label></p>
 	<p><input type="text" name="DisplayOrder" value="{{album.DisplayOrder}}" class="input" /></p>
 	<p><input type="submit" value="保存" class="button" />

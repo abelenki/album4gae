@@ -132,7 +132,7 @@ class Admin_CreateAlbum(AdminControl):
     def get(self):
         self.render('views/admin/album.html',{'albums':methods.GetAllAlbums()})
     def post(self):
-        methods.CreateAlbum(users.get_current_user(),self.request.get('albumname'),'')
+        methods.CreateAlbum(users.get_current_user(),self.request.get('albumname'),'',self.request.get('summary'))
         self.redirect('/admin/albums/',{})
 
 class AdminEditAlbum(AdminControl):
@@ -145,6 +145,7 @@ class AdminEditAlbum(AdminControl):
         album = methods.GetAlbum(int(self.request.get('albumid')))
         album.AlbumName = self.request.get('AlbumName')
         album.DisplayOrder = int(self.request.get('DisplayOrder'))
+        album.Summary = self.request.get('Summary')
         album.Save()
         #self.redirect('/admin/albums/')
         self.response.out.write('<script type="text/javascript">window.parent.location.reload();</script>')

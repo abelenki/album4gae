@@ -19,9 +19,9 @@ def cache(key="",time=3600):
     return _decorate
 
 
-def CreateAlbum(user,name='',password=''):
+def CreateAlbum(user,name='',password='',summary = ''):
     '''创建相册'''
-    album = model.Albums(AlbumName=name,AlbumPassword=password,AlbumAuthor=user)
+    album = model.Albums(AlbumName=name,AlbumPassword=password,AlbumAuthor=user,Summary = summary)
     album.Save()
     memcache.delete('ALLALBUMS')
     return True

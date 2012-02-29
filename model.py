@@ -32,10 +32,15 @@ class Albums(db.Model):
     CreateDate = db.DateTimeProperty(auto_now_add = True)
     DisplayOrder = db.IntegerProperty(default = 0)
     CoverId = db.IntegerProperty(default = 0)
+    Summary = db.StringProperty(default='')
+
+
+
     def id(self):
         return str(self.key().id())
     def Save(self):
         self.put()
+        memcache.delete('ALBUM_'+str(self.key().id()))
         memcache.delete('ALLALBUMS')
     def Delete(self):
         self.delete()
