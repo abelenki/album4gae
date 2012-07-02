@@ -14,7 +14,7 @@ import model
 import time
 
 import datetime
-
+version = 'v10'
 from upyun import UpYun,md5,md5file
 
 
@@ -60,7 +60,8 @@ class PublicPage(webapp.RequestHandler):
         #setting.initSettings()
         
     def render(self, template_file, template_value):
-        path = os.path.join(os.path.dirname(__file__), template_file)
+        path = os.path.join(os.path.dirname(__file__), 'views/'+version+'/'+template_file)
+
         self.response.out.write(template.render(path, template_value))
     def error(self,code):
         if code==400:
@@ -73,6 +74,22 @@ class PublicPage(webapp.RequestHandler):
     def head(self, *args):
         return self.get(*args) 
     
+class SwfHandler(webapp.RequestHandler):
+    def get(self, swf):
+        template_values = {}
+        themes = os.listdir(os.path.join(os.path.dirname(__file__), 'views/'+version+'/'))
+        swf+='.swf'
+       
+        if swf in themes:
+            path = os.path.join(os.path.dirname(__file__), 'views/'+version+'/', swf)
+        output = template.render(path, template_values)
+        expires_date = datetime.datetime.utcnow() + datetime.timedelta(days=7)
+        expires_str = expires_date.strftime("%d %b %Y %H:%M:%S GMT")
+        self.response.headers.add_header("Expires", expires_str)
+        self.response.headers['Cache-Control'] = 'max-age=120, must-revalidate'
+        self.response.headers['Content-type'] = 'application/x-shockwave-flash'
+        self.response.out.write(output)    
+
 class MainPage(PublicPage):
     def get(self,page):
         
@@ -82,7 +99,8 @@ class MainPage(PublicPage):
         template_value={"albums":albums[:24],"isadmin":self.is_admin(),"config":model.settings,
         'usage':self.usage
         }
-        self.render('views/index.js.html', template_value)
+        #self.render('views/index.js.html', template_value)
+        self.render('index.html',template_value)
 
 
 class CrossDomain(PublicPage):
@@ -106,16 +124,9 @@ class AlbumPage(PublicPage):
             pagecount = int(math.ceil(float(album.PhotoCount)/pagesize))
             offset = (page-1)*pagesize
             limit = offset + pagesize
-            #_photos = album.Photos(offset,pagesize)
-            #_photos = _photos[offset:limit]
+           
             _photos = album.Photos(page,pagesize)
-            #for a in _photos:
-            #    a.left = random.randint(0,MAX_WEIGTH)
-            #    a.top=random.randint(0,400)
-            #    a.rot = random.randint(-40,40)
-            #    if a.top>MAX_HEIGHT-130 and a.left > MAX_WEIGTH-230 :
-            #        a.top-=120+130
-            #        a.left-=230
+           
             template_value = {'photos':_photos,'album':album,'config':model.settings,'usage':self.usage}
             template_value.update(page=page)
             template_value.update(pagecount = pagecount)
@@ -132,18 +143,54 @@ class Gallery(PublicPage):
             self.error(404)
         else:
             photos = album.Photos
+
             template_value = {'photos':photos,'album':album}
-            self.response.headers['Content-Type'] = 'application/xml'
+
+            #self.response.headers['Content-Type'] = 'application/xml'
             self.render('views/gallery.html',template_value)
+
+
+
+
+class V9Gallery(PublicPage):
+    def get(self):
+        albums = methods.GetAllAlbums()
+        _albums = []
+        for a in albums:
+            _value = {'album':a,'photos':None}
+            photos = a.Photos(1,1000)
+            _photos = []
+            for photo in photos:
+                photo.url = '/'.join(photo.imgurl.split('/')[-2:])
+                _photos.append(photo)
+                
+            _albums.append({'album':a,'photos':_photos})
+        template_value = {'albums':_albums}
+        
+        path = os.path.join(os.path.dirname(__file__), 'views/v10/gallery.xml')
+        template_value["config"]  = model.settings
+        output = template.render(path, template_value)
+        expires_date = datetime.datetime.utcnow() + datetime.timedelta(days=7)
+        expires_str = expires_date.strftime("%d %b %Y %H:%M:%S GMT")
+        self.response.headers.add_header("Expires", expires_str)
+        self.response.headers['Cache-Control'] = 'max-age=120, must-revalidate'
+        self.response.headers['Content-type'] = 'application/xml'
+        self.response.out.write(output)    
+        
+
+
+
+
 class ShowImage(PublicPage):
     def get(self,id):
         data=methods.GetPhoto(id)        
         if not data['photo']:return self.error(404)
         template_value={"image":data,"admin":self.is_admin()}
-        
         self.render('views/show.html', template_value)
     
-    
+
+
+
 class GetImage(PublicPage):
     def get(self,size,id):
         dic=self.request.headers
@@ -168,16 +215,21 @@ def main():
     webapp.template.register_template_library('filter')
     application = webapp.WSGIApplication(
                                        [('/(?P<page>[0-9]*)/?', MainPage),
+                                        ('/(?P<swf>[0-9a-zA-Z]+)\.swf', SwfHandler),
                                         (r'/(?P<size>image)/(?P<id>[0-9]+)\.jpeg',GetImage),
                                         (r'/(?P<size>thumb)/(?P<id>[0-9]+)\.jpeg',GetImage),
                                         (r'/photo/(?P<id>[0-9]+)\.jpeg',ShowImage),
                                         (r'(?:/album/(?P<id>[0-9]+))?(?:/page/?(?P<page>[0-9]+))?/?',AlbumPage),
                                         (r'/album/(?P<id>[0-9]+)/gallery\.xml',Gallery),
+                                        (r'/gallery\.xml',V9Gallery),
                                         (r'/SwfUpload/',SwfUpload),
                                         (r'/crossdomain\.xml',CrossDomain),
                                         ('.*',Error)
                                        ], debug=True)
     wsgiref.handlers.CGIHandler().run(application)
+
+
+
 
 if __name__ == "__main__":
     main()
