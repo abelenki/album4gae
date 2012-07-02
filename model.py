@@ -140,17 +140,16 @@ def InitData():
     settings.save()
     return settings
 
+
+
+
 def site_init():
     settings = memcache.get('SITE_CONFIG')
-    
     if  settings is None:
         settings = Settings.get_by_key_name('default')
-    
         if settings is None:
             settings = InitData()
-    
         val = memcache.set('SITE_CONFIG',settings,3600)
-    
     return settings
 
 
