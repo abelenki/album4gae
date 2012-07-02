@@ -16,50 +16,30 @@ import time
 import datetime
 
 from upyun import UpYun,md5,md5file
-
+yun = None
 
 def format_date(dt):
     return dt.strftime('%a, %d %b %Y %H:%M:%S GMT')
 
 
-class SwfUpload(webapp.RequestHandler):
-    def get(self):
-        self.response.out.write('GET')
-        return
-    def post(self):
-       
-        bf=self.request.get("Filedata")
-       
-        if not bf:
-            return self.redirect('/admin/upload/')
-        u = UpYun()
-        path = '/album/'+ datetime.datetime.now().strftime('%m')+ '/'+datetime.datetime.now().strftime('%Y%m%d-%H%M%S')+'.jpg'
-        a = u.writeFile(path,bf,True)
-        logging.info('upload result:'+str(a))
-        if a == True:
-            description=self.request.get("Description")
-            name = self.request.get("Name")
-            album = model.Albums().get_by_id(int(self.request.get("album")))
-            imageurl = 'http://imgstore.b0.upaiyun.com'+path
-            image = methods.AddPhoto(name,description,'images/jpg',album,users.get_current_user(),bf,imageurl)
-            self.response.out.write(imageurl+"!thumb")
-        else:
-            logging.info('upload image to upyun error:'+str(a))
-            self.response.out.write(0)
-        return
 
 
 class PublicPage(webapp.RequestHandler):
     def __init__(self):
         super(PublicPage,self).__init__()
         setting = model.settings
-        yun= UpYun()
+        global yun
+        yun= UpYun(username = setting.UpYunUser,password=setting.UpYunPass,bucket=setting.UpYunBucket)
         diskUsage = 0
-        diskUsage = (yun.getBucketUsage()+.0)/1024/1024
+        try:
+            diskUsage = (yun.getBucketUsage()+.0)/1024/1024
+        except Exception:
+            pass
         self.usage = '%.2f M'%(diskUsage)
         #setting.initSettings()
         
     def render(self, template_file, template_value):
+
         path = os.path.join(os.path.dirname(__file__), template_file)
         self.response.out.write(template.render(path, template_value))
     def error(self,code):
@@ -73,6 +53,32 @@ class PublicPage(webapp.RequestHandler):
     def head(self, *args):
         return self.get(*args) 
     
+
+
+class SwfUpload(PublicPage):
+    def get(self):
+        self.response.out.write('GET')
+        return
+    def post(self):
+       
+        bf=self.request.get("Filedata")
+        if not bf:
+            return self.redirect('/admin/upload/')
+        path = '/album/'+ datetime.datetime.now().strftime('%m')+ '/'+datetime.datetime.now().strftime('%Y%m%d-%H%M%S')+'.jpg'
+        a = yun.writeFile(path,bf,True)
+        logging.info('upload result:'+str(a))
+        if a == True:
+            description=self.request.get("Description")
+            name = self.request.get("Name")
+            album = model.Albums().get_by_id(int(self.request.get("album")))
+            imageurl = 'http://imgstore.b0.upaiyun.com'+path
+            image = methods.AddPhoto(name,description,'images/jpg',album,users.get_current_user(),bf,imageurl)
+            self.response.out.write(imageurl+"!thumb")
+        else:
+            logging.info('upload image to upyun error:'+str(a))
+            self.response.out.write(0)
+        return
+
 class MainPage(PublicPage):
     def get(self,page):
         
