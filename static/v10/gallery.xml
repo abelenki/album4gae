@@ -1,78 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gallery>
-		<!--
-
-					dfGallery
-			
-			Author	: G.S.Navin Raj Kumar
-			URL		: http://dezinerfolio.com
-			Date	: 14-June-2007
-			Version : 1.0b
-
-			PLEASE READ THE DOCUMENTATION CAREFULLY BEFORE MODIFYING THIS FILE.
-
-		-->
-		<!-- configure the gallery in this xml-node -->
+		
 		<config>
-
-			<!-- set the title of the album -->
 			<title>Sinan's Photos</title>
-
-			<!-- set the location of the thumbnails relative to the gallery.swf -->
 			<thumbnail_dir>images/thumbs/</thumbnail_dir>
-			
-			<!-- set the actlocation of the actual high-res images relative to the gallery.swf -->
 			<image_dir>images/big/</image_dir>
-			
-			<!-- the time interval for each image to display, this value is in seconds
-			default value : 5
-			-->
 			<slideshow_interval>5</slideshow_interval>
-
-			<!-- pause slideshow at start
-			default value : false
-			-->
 			<pause_slideshow>false</pause_slideshow>
-
-			<!-- set true if you want the application to scale the images while using RSS feeds
-			default value : true
-			-->
 			<rss_scale_images>true</rss_scale_images>
-
-			<!-- set the path of the mp3 file that should loop as a background music while playing the slideshow.
-			default value : none
-			-->
 			<background_music>Johnny Quest.mp3</background_music>
-
-			<!-- percentage of the volume to set while playing the music
-			default value : 50
-			-->
 			<background_music_volume>50</background_music_volume>
-
-			<!-- add links to images, and allow the views to click on images from flickr, picasa,and 
-			view the page where the actual image is found.
-			If you dont want views to visit the picasa, or flickr or other sites keep this value false.
-			default value : false
-			-->
 			<link_images>false</link_images>
-
-			<!--
-			Photographers will like to disable printscreen for their pictures
-			to increase the security of their photographs.
-			Set this value to true if you wish to disable print screen in the application.
-			While the application is running the print screen option will be completely disabled in 
-			all other applications that the visitor is using.
-
-			default value : false
-			-->
 			<disable_printscreen>false</disable_printscreen>
-		
 		</config>
-		
-
-
-
-		<!-- this node contains all the albums -->
         <albums>
 		  <album title="美女清凉照" description="性感美女一网打尽">
           <image title="美女1" date="21.04.07" thumbnail="01.jpg" image="01.jpg">A perfect shot of a white tiger walking in the woods</image>

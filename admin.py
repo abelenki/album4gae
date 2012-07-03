@@ -18,11 +18,6 @@ adminFlag=True
 class AdminControl(webapp.RequestHandler):
     def __init__(self):
         super(AdminControl,self).__init__()
-        #global SITE_CONFIG
-        #SITE_CONFIG =  model.Settings().initSettings()
-        #logging.info('initConfig:'+str(SITE_CONFIG))
-        #print SITE_CONFIG
-        
     def render(self,template_file,template_value):
         path=os.path.join(os.path.dirname(__file__),template_file)
         self.response.out.write(template.render(path, template_value))
@@ -183,11 +178,13 @@ class Admin_Login(AdminControl):
 def main():
     webapp.template.register_template_library('filter')
     application = webapp.WSGIApplication(
-                   [(r'/admin/upload/', Admin_Upload),
+                   [
+                   ('/admin/?',AdminMain),
+                   (r'/admin/upload/', Admin_Upload),
                     (r'/admin/settings/', AdminSettings),
                     (r'/admin/deleteAlbum/(?P<id>[0-9]+)/',AdminDeleteAlbum),
                     (r'/admin/albums/', Admin_CreateAlbum),
-                    (r'/admin/?',AdminMain),
+                    
                     (r'/admin/(?P<id>[0-9]+)/',PhotoList),
                     (r'/admin/left/',AdminLeft),
                     (r'/admin/top/',AdminTop),
