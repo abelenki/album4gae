@@ -77,8 +77,10 @@ class AdminTop(AdminControl):
     def get (self):
         yun= upyun.UpYun()
         diskUsage = 0
-        diskUsage = (yun.getBucketUsage()+.0)/1024/1024
-
+        try:
+            diskUsage = (yun.getBucketUsage()+.0)/1024/1024
+        except Exception:
+            pass
         self.render('views/admin/top.html',{'username':users.get_current_user(),
             'logouturl':users.create_logout_url('http://'+os.environ['HTTP_HOST']),
             'usage':'%.2f M'%(diskUsage)
@@ -185,7 +187,7 @@ def main():
                     (r'/admin/settings/', AdminSettings),
                     (r'/admin/deleteAlbum/(?P<id>[0-9]+)/',AdminDeleteAlbum),
                     (r'/admin/albums/', Admin_CreateAlbum),
-                    (r'/admin/',AdminMain),
+                    (r'/admin/?',AdminMain),
                     (r'/admin/(?P<id>[0-9]+)/',PhotoList),
                     (r'/admin/left/',AdminLeft),
                     (r'/admin/top/',AdminTop),
