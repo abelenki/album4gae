@@ -39,13 +39,10 @@ class PublicPage(webapp.RequestHandler):
         #setting.initSettings()
         
     def render(self, template_file, template_value):
-<<<<<<< HEAD
 
-        path = os.path.join(os.path.dirname(__file__), template_file)
-=======
         path = os.path.join(os.path.dirname(__file__), 'views/'+version+'/'+template_file)
 
->>>>>>> c7c95238c694882bc68a1092aa6d3c02643fccd5
+
         self.response.out.write(template.render(path, template_value))
     def error(self,code):
         if code==400:
@@ -58,7 +55,7 @@ class PublicPage(webapp.RequestHandler):
     def head(self, *args):
         return self.get(*args) 
     
-<<<<<<< HEAD
+
 
 
 class SwfUpload(PublicPage):
@@ -84,7 +81,6 @@ class SwfUpload(PublicPage):
             logging.info('upload image to upyun error:'+str(a))
             self.response.out.write(0)
         return
-=======
 class SwfHandler(webapp.RequestHandler):
     def get(self, swf):
         template_values = {}
@@ -100,7 +96,6 @@ class SwfHandler(webapp.RequestHandler):
         self.response.headers['Cache-Control'] = 'max-age=120, must-revalidate'
         self.response.headers['Content-type'] = 'application/x-shockwave-flash'
         self.response.out.write(output)    
->>>>>>> c7c95238c694882bc68a1092aa6d3c02643fccd5
 
 class MainPage(PublicPage):
     def get(self,page):
@@ -111,7 +106,6 @@ class MainPage(PublicPage):
         template_value={"albums":albums[:24],"isadmin":self.is_admin(),"config":model.settings,
         'usage':self.usage
         }
-        #self.render('views/index.js.html', template_value)
         self.render('index.html',template_value)
 
 
