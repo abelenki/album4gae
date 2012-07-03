@@ -1,0 +1,23 @@
+<html>
+<head>
+<title>{{config.SiteTitle}}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script type="text/javascript" src="/static/js/swfobject.js"></script>
+</head>
+<body bgcolor="#000000" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" scroll="no">
+	<div id="flashcontent">
+		<strong>You need to upgrade your Flash Player.</strong>
+	</div>
+	<script type="text/javascript">
+		var so = new SWFObject("gallery.swf", "sotester", "100%", "100%", "7", "#000000");
+		so.addParam("allowFullScreen", "true");
+		so.addParam("scale", "noscale");
+		so.addParam("menu", "false");
+		so.addParam("quality","best");
+		so.write("flashcontent");
+	</script>
+
+
+	
+</body>
+</html>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gallery>
+		<config>
+			<title>{{config.SiteTitle}}</title>
+			<thumbnail_dir>http://imgstore.b0.upaiyun.com/album/</thumbnail_dir>
+			<image_dir>http://imgstore.b0.upaiyun.com/album/</image_dir>
+			<slideshow_interval>5</slideshow_interval>
+			<pause_slideshow>false</pause_slideshow>
+			<rss_scale_images>true</rss_scale_images>
+			<background_music>none</background_music>
+			<background_music_volume>50</background_music_volume>
+			<link_images>false</link_images>
+			<disable_printscreen>false</disable_printscreen>
+		</config>
+        <albums>
+
+{% for album in albums %}
+  <album title="{{album.album.AlbumName}}" description="" >
+  	{%for p in album.photos%}
+    <image thumbnail="{{p.url}}!thumb" image="{{p.url}}!p1" date=""  title="{{p.Name}}" Colour=""><![CDATA[{{p.Description}}]]></image>
+    {%endfor%}
+  </album>
+{% endfor %}
+		</albums>
+		<language>
+			<string id="please wait" value="Please wait"/>
+			<string id="loading" value="Loading"/>
+			<string id="previous page" value="Previous Page"/>
+			<string id="page % of %" value="Page % of %"/>
+			<string id="next page" value="Next Page"/>
+		</language>
+	</gallery>

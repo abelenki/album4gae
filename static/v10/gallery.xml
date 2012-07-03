@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gallery>
+		
+		<config>
+			<title>Sinan's Photos</title>
+			<thumbnail_dir>images/thumbs/</thumbnail_dir>
+			<image_dir>images/big/</image_dir>
+			<slideshow_interval>5</slideshow_interval>
+			<pause_slideshow>false</pause_slideshow>
+			<rss_scale_images>true</rss_scale_images>
+			<background_music>Johnny Quest.mp3</background_music>
+			<background_music_volume>50</background_music_volume>
+			<link_images>false</link_images>
+			<disable_printscreen>false</disable_printscreen>
+		</config>
+        <albums>
+		  <album title="美女清凉照" description="性感美女一网打尽">
+          <image title="美女1" date="21.04.07" thumbnail="01.jpg" image="01.jpg">A perfect shot of a white tiger walking in the woods</image>
+          <image title="美女2" date="29.05.07" thumbnail="02.jpg" image="02.jpg"> This beast scared us by giving us a really sudden shot.</image>
+		  <image title="美女3" date="29.05.07" thumbnail="03.jpg" image="03.jpg"> This beast scared us by giving us a really sudden shot.</image>
+		  <image title="美女4" date="29.05.07" thumbnail="04.jpg" image="04.jpg"> This beast scared us by giving us a really sudden shot.</image>
+		  <image title="美女5" date="29.05.07" thumbnail="05.jpg" image="05.jpg"> This beast scared us by giving us a really sudden shot.</image>
+		  <image title="美女6" date="29.05.07" thumbnail="06.jpg" image="06.jpg"> This beast scared us by giving us a really sudden shot.</image>
+		  <image title="美女7" date="29.05.07" thumbnail="07.jpg" image="07.jpg"> This beast scared us by giving us a really sudden shot.</image>
+		  <image title="美女8" date="29.05.07" thumbnail="08.jpg" image="08.jpg"> This beast scared us by giving us a really sudden shot.</image>
+		  <image title="美女9" date="29.05.07" thumbnail="09.jpg" image="09.jpg"> This beast scared us by giving us a really sudden shot.</image>
+		  <image title="美女10" date="29.05.07" thumbnail="10.jpg" image="10.jpg"> This beast scared us by giving us a really sudden shot.</image>
+          </album>
+          <album title="The Wild Cats." description="few images of the wild cats.">
+          <image title="White Tiger" date="21.04.07" thumbnail="c1.jpg" image="c1.jpg">A perfect shot of a white tiger walking in the woods</image>
+          <image title="Unexpected!" date="29.05.07" thumbnail="c2.jpg" image="c2.jpg"> This beast scared us by giving us a really sudden shot.</image>
+          </album>
+		</albums>
+
+
+		<!--  language support added in v 1.0b	-->
+		
+		<language>
+			<string id="please wait" value="Please wait"/>
+			<string id="loading" value="Loading"/>
+			<string id="previous page" value="Previous Page"/>
+			<string id="page % of %" value="Page % of %"/>
+			<string id="next page" value="Next Page"/>
+		</language>
+
+	</gallery>
