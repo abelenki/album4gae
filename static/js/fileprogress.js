@@ -159,7 +159,7 @@ FileProgress.prototype.appear = function () {
 
 // Fades out and clips away the FileProgress box.
 FileProgress.prototype.disappear = function () {
-
+	return;
 	var reduceOpacityBy = 15;
 	var reduceHeightBy = 4;
 	var rate = 30;	// 15 fps
