@@ -112,7 +112,7 @@ class PhotoList(AdminControl):
 class Admin_Upload(AdminControl):
     @requires_admin
     def get(self):
-        self.render('views/admin/upload.html', {'albums':methods.GetAllAlbums()})
+        self.render('views/admin/upload.v2.html', {'albums':methods.GetAllAlbums()})
     @requires_admin
     def post(self):
         bf=self.request.get("Filedata")

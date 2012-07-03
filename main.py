@@ -28,6 +28,7 @@ class PublicPage(webapp.RequestHandler):
     def __init__(self):
         super(PublicPage,self).__init__()
         setting = model.settings
+
         global yun
         yun= UpYun(username = setting.UpYunUser,password=setting.UpYunPass,bucket=setting.UpYunBucket)
         diskUsage = 0
@@ -36,16 +37,9 @@ class PublicPage(webapp.RequestHandler):
         except Exception:
             pass
         self.usage = '%.2f M'%(diskUsage)
-        #setting.initSettings()
         
     def render(self, template_file, template_value):
-<<<<<<< HEAD
-
-        path = os.path.join(os.path.dirname(__file__), template_file)
-=======
         path = os.path.join(os.path.dirname(__file__), 'views/'+version+'/'+template_file)
-
->>>>>>> c7c95238c694882bc68a1092aa6d3c02643fccd5
         self.response.out.write(template.render(path, template_value))
     def error(self,code):
         if code==400:
@@ -58,7 +52,6 @@ class PublicPage(webapp.RequestHandler):
     def head(self, *args):
         return self.get(*args) 
     
-<<<<<<< HEAD
 
 
 class SwfUpload(PublicPage):
@@ -66,11 +59,13 @@ class SwfUpload(PublicPage):
         self.response.out.write('GET')
         return
     def post(self):
-       
+        
         bf=self.request.get("Filedata")
+        
         if not bf:
             return self.redirect('/admin/upload/')
         path = '/album/'+ datetime.datetime.now().strftime('%m')+ '/'+datetime.datetime.now().strftime('%Y%m%d-%H%M%S')+'.jpg'
+
         a = yun.writeFile(path,bf,True)
         logging.info('upload result:'+str(a))
         if a == True:
@@ -84,7 +79,7 @@ class SwfUpload(PublicPage):
             logging.info('upload image to upyun error:'+str(a))
             self.response.out.write(0)
         return
-=======
+
 class SwfHandler(webapp.RequestHandler):
     def get(self, swf):
         template_values = {}
@@ -100,7 +95,7 @@ class SwfHandler(webapp.RequestHandler):
         self.response.headers['Cache-Control'] = 'max-age=120, must-revalidate'
         self.response.headers['Content-type'] = 'application/x-shockwave-flash'
         self.response.out.write(output)    
->>>>>>> c7c95238c694882bc68a1092aa6d3c02643fccd5
+
 
 class MainPage(PublicPage):
     def get(self,page):
@@ -111,14 +106,13 @@ class MainPage(PublicPage):
         template_value={"albums":albums[:24],"isadmin":self.is_admin(),"config":model.settings,
         'usage':self.usage
         }
-        #self.render('views/index.js.html', template_value)
+        
         self.render('index.html',template_value)
 
 
 class CrossDomain(PublicPage):
     def get(self):
         self.response.headers['Content-Type'] = 'text/xml' 
-        
         self.render('views/crossdomain.xml',{})
 
 class AlbumPage(PublicPage):
@@ -148,22 +142,6 @@ class AlbumPage(PublicPage):
             self.render('views/album.js.html',template_value)
 
 
-class Gallery(PublicPage):
-    def get(self,id):
-        album = methods.GetAlbum(id)
-        if album is None:
-            self.error(404)
-        else:
-            photos = album.Photos
-
-            template_value = {'photos':photos,'album':album}
-
-            #self.response.headers['Content-Type'] = 'application/xml'
-            self.render('views/gallery.html',template_value)
-
-
-
-
 class V9Gallery(PublicPage):
     def get(self):
         albums = methods.GetAllAlbums()
@@ -179,7 +157,7 @@ class V9Gallery(PublicPage):
             _albums.append({'album':a,'photos':_photos})
         template_value = {'albums':_albums}
         
-        path = os.path.join(os.path.dirname(__file__), 'views/v10/gallery.xml')
+        path = os.path.join(os.path.dirname(__file__), 'views/'+version+'/gallery.xml')
         template_value["config"]  = model.settings
         output = template.render(path, template_value)
         expires_date = datetime.datetime.utcnow() + datetime.timedelta(days=7)
@@ -191,15 +169,6 @@ class V9Gallery(PublicPage):
         
 
 
-
-
-class ShowImage(PublicPage):
-    def get(self,id):
-        data=methods.GetPhoto(id)        
-        if not data['photo']:return self.error(404)
-        template_value={"image":data,"admin":self.is_admin()}
-        self.render('views/show.html', template_value)
-    
 
 
 
@@ -214,10 +183,7 @@ class GetImage(PublicPage):
         if not image:
             return self.error(404)
         self.redirect(image) 
-        #self.response.headers['Content-Type'] = str(image.Mime) 
-        #self.response.headers['Cache-Control']="max-age=315360000"
-        #self.response.headers['Last-Modified']=format_date(image.CreateTime)
-        #self.response.out.write(image.PhotoStream)
+        
 
 class Error(PublicPage):
     def get(self):
@@ -230,9 +196,9 @@ def main():
                                         ('/(?P<swf>[0-9a-zA-Z]+)\.swf', SwfHandler),
                                         (r'/(?P<size>image)/(?P<id>[0-9]+)\.jpeg',GetImage),
                                         (r'/(?P<size>thumb)/(?P<id>[0-9]+)\.jpeg',GetImage),
-                                        (r'/photo/(?P<id>[0-9]+)\.jpeg',ShowImage),
+                                        
                                         (r'(?:/album/(?P<id>[0-9]+))?(?:/page/?(?P<page>[0-9]+))?/?',AlbumPage),
-                                        (r'/album/(?P<id>[0-9]+)/gallery\.xml',Gallery),
+                                        
                                         (r'/gallery\.xml',V9Gallery),
                                         (r'/SwfUpload/',SwfUpload),
                                         (r'/crossdomain\.xml',CrossDomain),
