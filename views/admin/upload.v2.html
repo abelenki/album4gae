@@ -1,0 +1,106 @@
+{% extends "adminbase.html" %}
+{% block title %}我的相册{% endblock %}
+{%block nav%}我的相册{%endblock%}
+{%block script%}
+<link href="/static/swfupload/default.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/static/js/jquery.min.js"></script>
+<script type="text/javascript" src="/static/swfupload/swfupload.js"></script>
+<script type="text/javascript" src="/static/swfupload/swfupload.queue.js"></script>
+<script type="text/javascript" src="/static/js/fileprogress.js"></script>
+<script type="text/javascript" src="/static/js/handlers.js"></script>
+<script type="text/javascript">
+		var  upload;
+		window.onload = function() {
+			upload = new SWFUpload({
+				// Backend Settings
+				upload_url: "/SwfUpload/",
+				post_params: {},
+				
+				
+				file_size_limit : "1024",	
+				file_types : "*.jpg;*.gif;*.png",
+				file_types_description : "Image Files",
+				file_upload_limit : "100",
+				file_queue_limit : "100",
+
+				// Event Handler Settings (all my handlers are in the Handler.js file)
+				swfupload_preload_handler : preLoad,
+				swfupload_load_failed_handler : loadFailed,
+				file_dialog_start_handler : setPost,
+				file_queued_handler : fileQueued,
+				file_queue_error_handler : fileQueueError,
+				file_dialog_complete_handler : fileDialogComplete,
+				upload_start_handler : uploadStart,
+				upload_progress_handler : uploadProgress,
+				upload_error_handler : uploadError,
+				upload_success_handler : uploadSuccess,
+				upload_complete_handler : uploadComplete,
+
+				// Button Settings
+				button_image_url : "/static/swfupload/XPButtonUploadText_61x22.png",
+				button_placeholder_id : "spanButtonPlaceholder",
+				button_width: 61,
+				button_height: 22,
+				
+				// Flash Settings
+				flash_url : "/static/swfupload/swfupload.swf",
+				flash9_url : "/static/swfupload/swfupload_fp9.swf",
+
+				swfupload_element_id : "flashUI2",		// Setting from graceful degradation plugin
+				degraded_element_id : "degradedUI2",	// Setting from graceful degradation plugin
+
+				custom_settings : {
+					progressTarget : "fsUploadProgress",
+					cancelButtonId : "btnCancel"
+				},
+
+				// Debug Settings
+				debug: false
+			});
+
+			upload.settings.post_params.album=$('#album').val();
+			$('#album').change(function(){
+			   album = $(this).val();
+			   upload.addPostParam("album", album)
+			});
+	    }
+	    function setPost()  //动态传递参数
+        {
+          album = $('#album').val();
+          
+          upload.addPostParam("album", album);
+          //upload.addPostParam("album", album);//动态修改SWFUpload初始化设置中的post_params属性，其中所有的值都将被覆盖。
+        }
+	</script>
+	{%endblock%}
+{% block main %}
+
+<form id="upload_form" action="/admin/upload/" enctype="multipart/form-data" method="post">
+  <fieldset>
+  <legend>创建一个新相册</legend>
+<p><label>相册</label></p>
+<p>
+<select name="album" id="album">
+{%for a in albums %}
+<option value="{{a.id}}">{{a.AlbumName}}</option>
+{%endfor%}
+</select>
+</p>
+<p><label>标题</label></p>
+<p><input type="text" name="Name"  class="input" /></p>
+<p><label>说明</label></p>
+<p><input type="text" name="Description" class="input"  /></p>
+<div class="fieldset flash" id="fsUploadProgress">
+							
+						</div>
+						<div style="padding-left: 5px;">
+							<span id="spanButtonPlaceholder"></span>
+							<input id="btnCancel" type="button" value="Cancel Uploads" onclick="cancelQueue(upload);" disabled="disabled" style="margin-left: 2px; height: 22px; font-size: 8pt;" />
+							<br />
+						</div>
+
+  </fieldset>
+  </form>
+{% endblock %}
+</body>
+</html>
