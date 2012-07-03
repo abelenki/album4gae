@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+
+<content>
+{% for album in albums %}
+  <gallery Name="{{album.album.AlbumName}}" Folder="http://imgstore.b0.upaiyun.com/album">
+  	{%for p in album.photos%}
+    <image Thumb="{{p.url}}!thumb" Large="{{p.url}}!p1" Caption="{{p.Name}}" Colour="">
+	<copy><![CDATA[{{p.Description}}]]></copy>
+    </image>
+    {%endfor%}
+  </gallery>
+{% endfor %}
+</content>
+
+
+
+
