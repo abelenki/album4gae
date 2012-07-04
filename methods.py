@@ -26,6 +26,8 @@ def CreateAlbum(user,name='',password='',summary = ''):
     memcache.delete('ALLALBUMS')
     return True
 
+#yibin135
+#yibin
 
 
 @cache(key='ALLALBUMS',time=3600)
