@@ -11,7 +11,7 @@ from django.utils import simplejson
 from google.appengine.api import memcache
 from model import settings
 import upyun
-adminFlag=True
+adminFlag=True #comment
 
 
 
